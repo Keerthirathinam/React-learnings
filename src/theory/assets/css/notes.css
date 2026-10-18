@@ -51,6 +51,13 @@ h1 {
   max-width: 62ch;
 }
 
+h2.episode {
+  font-family: Palatino, "Iowan Old Style", Georgia, serif;
+  font-size: 22px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+}
+
 nav {
   display: flex;
   gap: 10px;
@@ -143,8 +150,10 @@ p code, li code {
   border-radius: 4px;
 }
 
-ul { margin: 0 0 12px; padding-left: 18px; }
+ul, ol { margin: 0 0 12px; padding-left: 18px; }
 li { margin: 0 0 6px; }
+
+.answer a { color: var(--accent); }
 
 table {
   width: 100%;

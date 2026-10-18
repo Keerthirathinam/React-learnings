@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interview deep dive</title>
+  <link rel="stylesheet" href="../assets/css/interview.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="toc">
+      <p class="brand">Theory · Interview</p>
+      <h2>Topics</h2>
+      <a href="#js">JavaScript</a>
+      <a href="#react">React</a>
+      <a href="#ts">TypeScript</a>
+      <a href="#redux">Redux Toolkit</a>
+      <a href="#rtk">RTK Query</a>
+      <a href="#gql">GraphQL</a>
+      <a href="#browser">Browser internals</a>
+      <a href="#webpack">Webpack</a>
+      <a href="#perf">Performance</a>
+      <a href="#sys">Frontend system design</a>
+      <a href="#coding">Must-know coding</a>
+      <a href="#rn">React Native</a>
+    </aside>
+
+    <div class="wrap">
+      <header>
+        <p class="kicker">Frontend interview pack</p>
+        <h1>Deep dive, one place</h1>
+        <p class="lede">Every topic from the list, expanded enough to speak in an interview. Duplicates (GC, WeakMap, fetch lifecycle, and so on) are merged. For one-line answers and official docs, use the gist page.</p>
+        <nav class="links">
+          <a href="short-answers.html">Short answers / gist</a>
+          <a href="../index.html">Theory notes</a>
+          <a href="../../../index.html">Repo home</a>
+        </nav>
+      </header>
+
+      <h2 class="section" id="js">JavaScript</h2>
+
+      <details>
+        <summary><span class="n">01</span> Execution context</summary>
+        <div class="answer">
+          <p><span class="label">Answer</span></p>
+          <p>An execution context is the environment where a piece of JS runs. It has a variable environment (bindings), a lexical environment (scope chain), and a <code>this</code> binding. There is a global context, one function context per call, and <code>eval</code> (avoid it).</p>
+          <p>Creation phase: hoist <code>var</code> / function declarations, set <code>this</code>. Execution phase: assign values, run statements. Modules get their own module context.</p>
+          <p><span class="label">Say</span></p>
+          <p>“JS never just runs a line in a vacuum. It creates a context, wires scope and <code>this</code>, then executes.”</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">02</span> Call stack</summary>
+        <div class="answer">
+          <p><span class="label">Answer</span></p>
+          <p>The call stack is a LIFO structure of active execution contexts. A function call pushes a frame; <code>return</code> pops it. Recursion without a base case overflows the stack. Async work does not sit on the stack waiting — it is scheduled, then a new frame is pushed later.</p>
+          <pre><code>function a() { b(); }
+function b() { console.log("b"); }
+a(); // stack: global → a → b → pop b → pop a</code></pre>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">03</span> Closures</summary>
+        <div class="answer">
+          <p><span class="label">Answer</span></p>
+          <p>A closure is a function plus the lexical environment it was created in. The inner function can read and write outer variables even after the outer function has returned. Used for data hiding, factory functions, and hooks.</p>
+          <pre><code>function makeCounter() {
+  let n = 0;
+  return () => ++n;
+}
+const c = makeCounter();
+c(); // 1 — n is still alive</code></pre>
+          <p>Stale closures happen when a callback captured an old value (classic <code>useEffect</code> / <code>setTimeout</code> bug).</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">04</span> Hoisting</summary>
+        <div class="answer">
+          <p><span class="label">Answer</span></p>
+          <p>During context creation, declarations are registered before the body runs. <code>function</code> declarations are fully hoisted. <code>var</code> is hoisted and initialized as <code>undefined</code>. <code>let</code> / <code>const</code> are hoisted but stay in the Temporal Dead Zone until the line runs. <code>class</code> is also TDZ.</p>
+          <pre><code>console.log(a); // undefined
+var a = 1;
+console.log(b); // ReferenceError
+let b = 2;</code></pre>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">05</span> Scope</summary>
+        <div class="answer">
+          <p><span class="label">Answer</span></p>
+          <p>Scope is where a binding is visible. JS has global, function, block (<code>let</code>/<code>const</code>/<code>class</code>), and module scope. Lexical scope is decided by where the function is written, not where it is called. The scope chain walks outward until global.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">06</span> this</summary>
+        <div class="answer">
+          <p><span class="label">Answer</span></p>
+          <p><code>this</code> is set at call time for regular functions: method call → object, bare call → <code>undefined</code> in strict / global in sloppy, <code>new</code> → new instance, <code>call/apply/bind</code> → explicit. Arrow functions have no own <code>this</code>; they inherit from the enclosing lexical scope. Event handlers bind <code>this</code> to the element unless you use an arrow or <code>bind</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">07</span> Promises</summary>
+        <div class="answer">
+          <p><span class="label">Answer</span></p>
+          <p>A Promise is an object for a future value: pending, fulfilled, or rejected — one transition, then settled. <code>then</code> / <code>catch</code> / <code>finally</code> return new promises, so you chain. Always return or throw inside <code>then</code> so errors propagate. Unhandled rejections are bugs.</p>
+          <pre><code>fetch("/api")
+  .then((r) => r.json())
+  .then(console.log)
+  .catch(console.error);</code></pre>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">08</span> async / await</summary>
+        <div class="answer">
+          <p><span class="label">Answer</span></p>
+          <p><code>async</code> functions always return a Promise. <code>await</code> pauses that function until the promise settles, then unwraps the value or throws. Wrap <code>await</code> in <code>try/catch</code>. Do not <code>await</code> independent work in series — start them together and <code>await Promise.all</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">09</span> Event loop</summary>
+        <div class="answer">
+          <p><span class="label">Answer</span></p>
+          <p>JS is single-threaded. The event loop: run the call stack to empty, then drain the microtask queue (promises, <code>queueMicrotask</code>, MutationObserver) until empty, then take one macrotask (timer, I/O, UI event), then maybe render. Microtasks can starve rendering if you keep enqueueing them.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">10</span> Map / Set</summary>
+        <div class="answer">
+          <p><span class="label">Answer</span></p>
+          <p><code>Map</code> is a keyed collection that keeps insertion order and allows any key type (objects, NaN). <code>Set</code> stores unique values. Prefer them over objects/arrays when keys are not strings or you need reliable size and iteration. For caches of objects that should not pin memory, use WeakMap/WeakSet.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">11</span> Prototype and OOP basics</summary>
+        <div class="answer">
+          <p><span class="label">Answer</span></p>
+          <p>Every object has an internal [[Prototype]] (via <code>__proto__</code> / <code>Object.getPrototypeOf</code>). Property lookup walks the chain. Constructor functions set <code>Fn.prototype</code> as the prototype of instances. Methods live on the prototype so they are shared. <code>Object.create(proto)</code> builds an object with that proto. Classes are syntax over this model.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">12</span> Classes</summary>
+        <div class="answer">
+          <p><span class="label">Answer</span></p>
+          <p><code>class</code> is not hoisted like a function (TDZ). Methods are non-enumerable on the prototype. <code>extends</code> + <code>super</code> wire the prototype chain. Fields and private <code>#x</code> are instance state. Prefer composition when inheritance trees get deep.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">13</span> Modules (and ESM vs CJS)</summary>
+        <div class="answer">
+          <p><span class="label">Answer</span></p>
+          <p>Modules isolate scope, load once (singleton), and declare dependencies. <strong>ESM</strong> (<code>import</code>/<code>export</code>) is static, tree-shakeable, async in browsers, live bindings. <strong>CommonJS</strong> (<code>require</code>/<code>module.exports</code>) is sync, Node-legacy, copy of exports at require time. In browsers you need <code>type="module"</code>. Mixing them needs interop (<code>default</code> vs <code>module.exports</code>).</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">14</span> Deep vs shallow copy</summary>
+        <div class="answer">
+          <p><span class="label">Answer</span></p>
+          <p>Shallow copy (<code>{...obj}</code>, <code>Object.assign</code>, <code>[...arr]</code>) copies one level; nested objects stay shared. Deep copy clones the graph. <code>structuredClone</code> handles most cases (not functions, DOM nodes, or prototypes). JSON parse/stringify drops functions, <code>undefined</code>, Dates become strings. React state updates must not mutate nested objects — clone the path you change.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">15</span> Currying</summary>
+        <div class="answer">
+          <p><span class="label">Answer</span></p>
+          <p>Currying turns <code>f(a, b, c)</code> into <code>f(a)(b)(c)</code>. Useful for partial application and reusable configured functions (event handlers, Redux action creators). Not the same as just passing a callback — it is a transform of arity.</p>
+          <pre><code>const add = (a) => (b) => a + b;
+const add10 = add(10);
+add10(5); // 15</code></pre>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">16</span> Memoization</summary>
+        <div class="answer">
+          <p><span class="label">Answer</span></p>
+          <p>Cache a function’s result keyed by arguments. Good for pure, expensive, same-input work. Bad if arguments are new objects every call (cache miss) or the function is cheap. In React, <code>useMemo</code> / <code>useCallback</code> / <code>React.memo</code> are memoization of values, functions, and components.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">17</span> var / let / const</summary>
+        <div class="answer">
+          <table>
+            <thead><tr><th></th><th>var</th><th>let</th><th>const</th></tr></thead>
+            <tbody>
+              <tr><td>Scope</td><td>function</td><td>block</td><td>block</td></tr>
+              <tr><td>Hoist</td><td>undefined</td><td>TDZ</td><td>TDZ</td></tr>
+              <tr><td>Reassign</td><td>yes</td><td>yes</td><td>no (object contents still mutable)</td></tr>
+              <tr><td>Redeclare</td><td>yes</td><td>no</td><td>no</td></tr>
+            </tbody>
+          </table>
+          <p>Default to <code>const</code>, <code>let</code> when reassignment is real. Do not use <code>var</code> in new code.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">18</span> Regular vs arrow functions</summary>
+        <div class="answer">
+          <p>Regular: own <code>this</code>, <code>arguments</code>, can be constructors, methods on prototypes. Arrow: lexical <code>this</code>, no <code>arguments</code>, not constructable, cannot be generators. Use arrows for callbacks that should keep outer <code>this</code>. Do not put arrows on a class prototype if you need a method that uses instance <code>this</code> from a caller — use a class field arrow if you need auto-bound handlers.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">19</span> call / apply / bind</summary>
+        <div class="answer">
+          <p><code>fn.call(thisArg, a, b)</code> invokes now with arguments listed. <code>fn.apply(thisArg, [a, b])</code> same with an array. <code>fn.bind(thisArg, a)</code> returns a new function with locked <code>this</code> (and optional partial args). After <code>bind</code>, you cannot re-bind <code>this</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">20</span> IIFE</summary>
+        <div class="answer">
+          <p>Immediately Invoked Function Expression: <code>(function () { ... })()</code>. Creates a private scope. Historically used to avoid leaking <code>var</code> into global. Modules replaced most IIFE use. Still seen in bookmarks, isolated snippets, and some library umd wrappers.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">21</span> Callbacks</summary>
+        <div class="answer">
+          <p>A callback is a function passed to be called later. Error-first Node style: <code>(err, data)</code>. Nested callbacks become “callback hell.” Promises and async/await flatten that. Still used everywhere: array methods, event listeners, <code>setTimeout</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">22</span> Microtasks vs macrotasks</summary>
+        <div class="answer">
+          <p><strong>Microtasks:</strong> Promise reactions, <code>queueMicrotask</code>, MutationObserver. Run after the current stack, before the next macrotask and before paint if the stack is empty. <strong>Macrotasks:</strong> <code>setTimeout</code>, <code>setInterval</code>, <code>setImmediate</code> (Node), I/O, UI events, <code>requestAnimationFrame</code> is its own render-aligned queue. <code>Promise.then</code> always beats a <code>setTimeout(0)</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">23</span> Promise.all, race, allSettled, error patterns</summary>
+        <div class="answer">
+          <ul>
+            <li><code>Promise.all</code> — fail fast; one reject rejects the whole thing.</li>
+            <li><code>Promise.allSettled</code> — wait for all; inspect <code>status</code> / <code>value</code> / <code>reason</code>.</li>
+            <li><code>Promise.race</code> — first settle wins (good for timeouts).</li>
+            <li><code>Promise.any</code> — first fulfill; all reject → AggregateError.</li>
+          </ul>
+          <p>Pattern: wrap each promise if you want all-or-log. Use AbortController with fetch. Never swallow errors in empty <code>catch</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">24</span> Destructuring, spread/rest, optional chaining, nullish, map/filter/reduce</summary>
+        <div class="answer">
+          <pre><code>const { a, b: renamed, ...rest } = obj;
+const copy = { ...obj, a: 2 };
+const first = arr?.[0]?.id ?? "fallback";
+arr.map(x => x * 2).filter(x => x > 2).reduce((s, x) => s + x, 0);</code></pre>
+          <p>Optional chaining short-circuits to <code>undefined</code>. Nullish (<code>??</code>) only replaces <code>null</code>/<code>undefined</code>, unlike <code>||</code> which also replaces <code>0</code> and <code>""</code>. Coercion: <code>==</code> coerces, <code>===</code> does not; <code>+</code> with a string concatenates. Prefer explicit <code>Number</code> / <code>Boolean</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">25</span> Object.freeze</summary>
+        <div class="answer">
+          <p>Makes an object shallow-immutable: no add/remove/reassign of own properties. Nested objects are still mutable. <code>Object.isFrozen</code> checks. Not a security boundary — just a contract. For deep freeze, recurse (or use Immer + freeze in Redux).</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">26</span> Coding: debounce, throttle, deepClone, flatten</summary>
+        <div class="answer">
+          <p><strong>Debounce:</strong> wait until calls stop for N ms, then run (search input). <strong>Throttle:</strong> run at most once per N ms (scroll). <strong>Deep clone:</strong> <code>structuredClone</code> or recursive copy. <strong>Flatten:</strong> <code>arr.flat(Infinity)</code> or recurse concat.</p>
+          <pre><code>function debounce(fn, ms) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), ms);
+  };
+}
+function throttle(fn, ms) {
+  let last = 0;
+  return (...args) => {
+    const now = Date.now();
+    if (now - last >= ms) { last = now; fn(...args); }
+  };
+}
+function flatten(arr) {
+  return arr.reduce((acc, x) => acc.concat(Array.isArray(x) ? flatten(x) : x), []);
+}</code></pre>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">27</span> Event bubbling and event listeners</summary>
+        <div class="answer">
+          <p>Capture (root → target) then bubble (target → root). <code>addEventListener(type, fn, { capture, once, passive, signal })</code>. <code>stopPropagation</code> stops travel; <code>preventDefault</code> stops default action. Remove listeners on unmount or use AbortController <code>signal</code>. Delegation: listen on a parent, use <code>event.target</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">28</span> Higher-order functions</summary>
+        <div class="answer">
+          <p>A HOF takes a function and/or returns a function: <code>map</code>, <code>filter</code>, <code>debounce</code>, Redux <code>connect</code>, React HOCs. Interview: “I treat functions as values so I can compose behavior without copy-paste.”</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">29</span> Browser APIs: localStorage, sessionStorage, setTimeout, window</summary>
+        <div class="answer">
+          <p><code>localStorage</code> persists per origin until cleared (~5MB, sync, strings only). <code>sessionStorage</code> dies with the tab. Both are XSS-readable — do not store tokens if XSS is possible. <code>setTimeout</code> is a macrotask, delay is minimum not exact, background tabs are clamped. <code>window</code> is the global object in browsers: location, history, fetch, document.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">30</span> Security: XSS, CSRF, SOP, CSP, encryption vs hashing</summary>
+        <div class="answer">
+          <ul>
+            <li><strong>XSS:</strong> attacker script in your page. Prevent: encode output, CSP, no <code>dangerouslySetInnerHTML</code> with user HTML, HttpOnly cookies.</li>
+            <li><strong>CSRF:</strong> browser sends cookies to your API from another site. Prevent: SameSite cookies, CSRF tokens, no cookie auth on mutating GET.</li>
+            <li><strong>Same-Origin Policy:</strong> scheme + host + port must match for JS to read the response / DOM.</li>
+            <li><strong>CSP (Content-Security-Policy):</strong> header that allowlists script/style sources. Not “content origin policy.”</li>
+            <li><strong>Encryption:</strong> reversible with a key (TLS, AES). <strong>Hashing:</strong> one-way (password + salt, SHA-256). Use bcrypt/argon2 for passwords, not raw SHA.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">31</span> Garbage collection and memory leaks</summary>
+        <div class="answer">
+          <p>JS uses reachability (mark-and-sweep). If something is reachable from roots (stack, globals, DOM, closures), it stays. Leaks: forgotten listeners/timers, detached DOM still referenced, unbounded caches, closures holding large objects, growing arrays in module scope. Fix: remove listeners, <code>clearTimeout</code>, WeakMap for object keys, abort fetches on unmount.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">32</span> WeakMap / WeakSet</summary>
+        <div class="answer">
+          <p>Keys (WeakMap) / values (WeakSet) must be objects (or symbols in newer WeakMap). They are weakly held — if nothing else references the object, GC can collect it and the entry vanishes. Not iterable, no <code>size</code>. Use for private data on objects, DOM node metadata, caches.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">33</span> Symbols</summary>
+        <div class="answer">
+          <p>Unique immutable primitive. <code>Symbol("desc")</code> never equals another. Used as collision-free object keys and well-known symbols (<code>Symbol.iterator</code>, <code>Symbol.toStringTag</code>). <code>Symbol.for</code> is a global registry. Hidden from typical <code>for...in</code> / <code>Object.keys</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">34</span> Iterators and generators</summary>
+        <div class="answer">
+          <p>An iterator is <code>{ next() { return { value, done } } }</code>. Iterable objects have <code>[Symbol.iterator]</code>. <code>for...of</code>, spread, and destructure use that. A generator (<code>function*</code>) pauses with <code>yield</code> and produces an iterator. Useful for lazy sequences and custom iterables. Async generators use <code>for await</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">35</span> Event delegation</summary>
+        <div class="answer">
+          <p>Attach one listener to a parent. On bubble, check <code>event.target</code> / <code>closest</code>. Works for items added later. Cheaper than N listeners. In React, the root already delegates most events — still useful for vanilla lists or native wrappers.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">36</span> AbortController</summary>
+        <div class="answer">
+          <p><code>const ac = new AbortController()</code>. Pass <code>ac.signal</code> to <code>fetch</code> and <code>addEventListener</code>. <code>ac.abort()</code> cancels in-flight work and removes those listeners. Essential to avoid setState-after-unmount and to cancel stale searches.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">37</span> Fetch lifecycle</summary>
+        <div class="answer">
+          <p>Create request → CORS / SOP checks → network → response headers (you can read <code>status</code> before body) → consume body (<code>json()</code> / <code>text()</code> once). Redirects follow by default. Abort via signal. <code>ok</code> is 200–299; 404 still “succeeds” the promise — check <code>response.ok</code>. Then parse. Errors: network reject, HTTP you handle, JSON parse throws.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">38</span> Regex</summary>
+        <div class="answer">
+          <p>Know <code>test</code>, <code>exec</code>, <code>String.match/replace/split</code>, flags <code>g i m s u y</code>. <code>^ $ . * + ? [] () \d \w \s</code>. LastIndex on global regex is a footgun. Prefer well-tested patterns for email/URL; do not invent crypto-grade validation with regex.</p>
+        </div>
+      </details>
+
+      <h2 class="section" id="react">React</h2>
+
+      <details>
+        <summary><span class="n">01</span> Virtual DOM</summary>
+        <div class="answer">
+          <p>A JS tree of React elements that describes the UI. React diffs the next tree with the previous (reconciliation) and applies a minimal DOM update. The win is predictable updates and batching, not “virtual is always faster than DOM.”</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">02</span> Basic components</summary>
+        <div class="answer">
+          <p>Function components receive props and return elements. Class components exist but new code uses functions + hooks. Components must be pure in render: same props/state → same output, no side effects in the function body.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">03</span> Fiber</summary>
+        <div class="answer">
+          <p>Fiber is React’s reconciler unit of work (a fiber node per component). It lets React pause, resume, reuse, and abort work. That enables concurrent features: time-slicing, interrupting a render for a more urgent update, Suspense.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">04</span> Reconciliation and keys</summary>
+        <div class="answer">
+          <p>React compares type + key at the same position. Same type → update props. Different type → unmount/remount. Keys tell React which child is which across renders. Unstable keys (index when list reorders) remount or mix state. Keys must be stable and unique among siblings.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">05</span> Hooks overview</summary>
+        <div class="answer">
+          <p>Hooks let function components hold state and lifecycle. Rules: only at top level, only in React functions. Order is how React matches hook state. Custom hooks are functions named <code>useX</code> that compose other hooks.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">06</span> Custom hooks</summary>
+        <div class="answer">
+          <p>Extract reusable stateful logic (not UI). Share one implementation of fetch, form, or media-query. Each caller gets its own state. Return a small API: values + functions.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">07</span> Context API</summary>
+        <div class="answer">
+          <p>Avoid prop drilling for rarely changing, widely needed data (theme, locale, auth). <code>createContext</code> + Provider + <code>useContext</code>. Any consumer re-renders when the provided value identity changes — split contexts or memoize the value. Not a replacement for all state (server cache, frequent updates).</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">08</span> React.memo, useMemo, useCallback</summary>
+        <div class="answer">
+          <p><code>React.memo</code> skips a component re-render if props are shallow-equal. <code>useMemo</code> caches a computed value. <code>useCallback</code> caches a function identity so memo children and effect deps stay stable. Measure first; they add complexity and can be slower if overused.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">09</span> Portals</summary>
+        <div class="answer">
+          <p><code>createPortal(node, domNode)</code> renders children into a DOM node outside the parent (modals, toasts). Events still bubble through the React tree, not the DOM parent.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">10</span> Error boundaries</summary>
+        <div class="answer">
+          <p>Class components with <code>getDerivedStateFromError</code> / <code>componentDidCatch</code> catch render errors in the subtree and show fallback UI. They do not catch event handlers, async, or the boundary itself. In React 19 you may also see newer APIs — still know class boundaries.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">11</span> Suspense and lazy loading</summary>
+        <div class="answer">
+          <p><code>React.lazy</code> + <code>Suspense</code> code-split a component. Suspense shows fallback while a child is waiting (lazy import, and in modern React, some data frameworks). <code>lazy</code> must default-export a component.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">12</span> Navigation</summary>
+        <div class="answer">
+          <p>React Router (or framework routers): routes as a tree, loaders, nested layouts, <code>Link</code> vs <code>a</code> (client vs full reload). Know <code>useNavigate</code>, params, search params, and that navigation is just mapping URL → component tree.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">13</span> useState object/array updates</summary>
+        <div class="answer">
+          <p>State is replaced, not mutated. Spread the object/array and change the copy. Nested updates need nested copies (or Immer). Functional updates <code>setX(prev => ...)</code> when next state depends on previous.</p>
+          <pre><code>setUser((u) => ({ ...u, name: "Ada" }));
+setItems((xs) => xs.map((x) => x.id === id ? { ...x, done: true } : x));</code></pre>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">14</span> useEffect: deps, cleanup, stale closure</summary>
+        <div class="answer">
+          <p>Effects run after paint. Deps: empty = mount/unmount, omitted = every render (usually wrong), listed = when those values change. Cleanup runs before the next effect and on unmount. Stale closure: the effect captured old state because it was missing from deps. Race: an older fetch finishes last — abort or ignore with a flag.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">15</span> useRef</summary>
+        <div class="answer">
+          <p>A mutable box that persists across renders and does not trigger re-render. DOM nodes, timer ids, previous values, “latest callback” refs to avoid stale closures without re-subscribing.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">16</span> useReducer</summary>
+        <div class="answer">
+          <p>For complex state transitions: <code>(state, action) => next</code>. Predictable, easy to test, good when next state depends on many fields. Same immutability rules as Redux.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">17</span> Component patterns</summary>
+        <div class="answer">
+          <ul>
+            <li><strong>Controlled vs uncontrolled:</strong> value in React state vs DOM owns it (<code>defaultValue</code> + ref).</li>
+            <li><strong>Composition:</strong> children / slots instead of boolean prop soup.</li>
+            <li><strong>Render props:</strong> <code>children(data)</code> or <code>render={}</code> to share logic.</li>
+            <li><strong>HOC:</strong> <code>withX(Comp)</code> wraps; prefer hooks today.</li>
+            <li><strong>Lifting state:</strong> move state to the nearest common parent.</li>
+            <li><strong>Compound components:</strong> <code>Select</code> + <code>Select.Option</code> sharing implicit context.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">18</span> Pagination</summary>
+        <div class="answer">
+          <p>Offset/limit or cursor. UI: page buttons or infinite scroll. Keep page in the URL. Cancel in-flight page requests. Cache pages (RTK Query). Do not splice keys so list state survives page change.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">19</span> Rendering lifecycle, concurrent rendering, batching</summary>
+        <div class="answer">
+          <p>Function body = render (pure). Then React commits to DOM, then runs layout effects, then paint, then passive effects. Concurrent: React may start a render and throw it away. Batching: multiple <code>setState</code> in the same event (and in React 18, in timeouts/promises too) become one render. Do not rely on reading state immediately after setState.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">20</span> Stale closures and useEffect races</summary>
+        <div class="answer">
+          <p>A function closed over <code>count</code> from render 1 still sees 1. Fix: functional updates, include deps, or a ref of the latest value. Race: effect starts fetch A, then deps change, fetch B starts, A returns later and writes. Fix: AbortController or <code>let cancelled = false</code> in cleanup.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">21</span> forwardRef and useImperativeHandle</summary>
+        <div class="answer">
+          <p><code>forwardRef</code> lets a parent pass a ref to a child function component (usually a DOM node). <code>useImperativeHandle(ref, () => ({ focus }))</code> exposes a small imperative API instead of the raw node. Prefer declarative props; use this for focus, scroll, play. React 19 can pass <code>ref</code> as a prop — still know forwardRef.</p>
+        </div>
+      </details>
+
+      <h2 class="section" id="ts">TypeScript</h2>
+
+      <details>
+        <summary><span class="n">01</span> Interface vs type</summary>
+        <div class="answer">
+          <p>Both describe shapes. <code>interface</code> can merge declarations and is typically for object contracts. <code>type</code> can do unions, intersections, mapped/conditional types, tuples. In apps, either is fine for props; use <code>type</code> when you need unions. Do not fight the team style.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">02</span> Generics</summary>
+        <div class="answer">
+          <p>Type parameters: <code>function identity&lt;T&gt;(x: T): T</code>. Constraints: <code>T extends { id: string }</code>. Used in <code>useState&lt;User&gt;</code>, API helpers, <code>Promise&lt;T&gt;</code>. Infer when you can; specify when inference fails.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">03</span> Union and intersection</summary>
+        <div class="answer">
+          <p>Union <code>A | B</code>: value is one of them; narrow with typeof, in, discriminants. Intersection <code>A &amp; B</code>: must satisfy both. Discriminated unions (<code>kind: "ok" | "err"</code>) are the interview gold standard for safe state.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">04</span> Utility types</summary>
+        <div class="answer">
+          <p><code>Partial&lt;T&gt;</code> optional keys. <code>Pick&lt;T, K&gt;</code> subset. <code>Omit&lt;T, K&gt;</code> without keys. <code>Record&lt;K, V&gt;</code> map. Also <code>Required</code>, <code>Readonly</code>, <code>ReturnType</code>, <code>Parameters</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">05</span> Enums vs const assertion</summary>
+        <div class="answer">
+          <p>Numeric enums are runtime objects and can be reverse-mapped — often surprising. Prefer <code>as const</code> objects + union of values: <code>const Role = { Admin: "admin" } as const; type Role = typeof Role[keyof typeof Role]</code>. String enums are clearer than numeric if you must use enums.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">06</span> Typing React props and events</summary>
+        <div class="answer">
+          <pre><code>type ButtonProps = {
+  label: string;
+  onClick: (e: React.MouseEvent&lt;HTMLButtonElement&gt;) => void;
+  children?: React.ReactNode;
+};
+function Button({ label, onClick, children }: ButtonProps) { ... }</code></pre>
+          <p>Use <code>ComponentProps&lt;"button"&gt;</code> to extend native attrs. Form events: <code>ChangeEvent&lt;HTMLInputElement&gt;</code>.</p>
+        </div>
+      </details>
+
+      <h2 class="section" id="redux">Redux Toolkit</h2>
+
+      <details>
+        <summary><span class="n">01</span> createSlice, reducers, actions</summary>
+        <div class="answer">
+          <p><code>createSlice</code> names a slice, initial state, and reducer map. It generates action creators and action types. You “mutate” state in reducers — Immer turns that into immutable updates. Do not mutate outside the reducer. Put request status in RTK Query or thunks, not giant slices, when it is server cache.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">02</span> configureStore</summary>
+        <div class="answer">
+          <p>Combines reducers, adds thunk, DevTools, and serializable/immutability checks in dev. Register slice reducers and API middleware for RTK Query.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">03</span> useSelector / useDispatch</summary>
+        <div class="answer">
+          <p><code>useSelector</code> subscribes; return a small selected value or the component re-renders too often. Use memoized selectors (reselect / <code>createSelector</code>) for derived data. <code>useDispatch</code> returns the store dispatch. Type them with <code>TypedUseSelectorHook</code> and <code>AppDispatch</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">04</span> Immer — when not to use</summary>
+        <div class="answer">
+          <p>Inside slice reducers and <code>createReducer</code>, Immer is on. Do not return a new state and also mutate the draft. Do not use Immer for class instances, or freeze/produce across promise boundaries casually. Outside Redux, mutating a draft you then pass to React will confuse you — either mutate a draft in <code>produce</code> or spread copies.</p>
+        </div>
+      </details>
+
+      <h2 class="section" id="rtk">RTK Query</h2>
+
+      <details>
+        <summary><span class="n">01</span> createApi, endpoints</summary>
+        <div class="answer">
+          <p><code>createApi</code> defines a reducer path, base query (<code>fetchBaseQuery</code>), and endpoints. <code>query</code> is GET-like cache reads. <code>mutation</code> writes. Hooks: <code>useGetXQuery</code>, <code>useUpdateXMutation</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">02</span> Tags, invalidation, caching</summary>
+        <div class="answer">
+          <p>Queries provide tags (<code>providesTags</code>). Mutations <code>invalidateTags</code> so stale queries refetch. Cache key is endpoint + serialized args. Unused data is garbage-collected after <code>keepUnusedDataFor</code>. This is the reason to use RTK Query over hand-rolled <code>useEffect</code> fetch.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">03</span> Optimistic updates, skip, transformResponse</summary>
+        <div class="answer">
+          <p>Optimistic: <code>onQueryStarted</code> + <code>updateQueryData</code>, then <code>undo</code> on error. <code>skip</code> / <code>skipToken</code> avoids firing until you have an id/token. <code>transformResponse</code> shapes the payload before it hits the cache. Prefer transform at the API boundary so UI stays dumb.</p>
+        </div>
+      </details>
+
+      <h2 class="section" id="gql">GraphQL</h2>
+
+      <details>
+        <summary><span class="n">01</span> Queries, mutations, variables, fragments</summary>
+        <div class="answer">
+          <p>Query reads; mutation writes (and can return new fields). Variables are typed arguments (<code>$id: ID!</code>). Fragments reuse field sets. One endpoint, client asks for a shape. Over-fetching is a REST problem GQL aims to fix; under-fetching N+1 is a server problem (dataloaders).</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">02</span> Errors, REST tradeoff, Apollo / RTK</summary>
+        <div class="answer">
+          <p>HTTP 200 with <code>errors</code> array is common — check both network and GraphQL errors. REST: simple cache/HTTP semantics, multiple URLs. GQL: flexible payload, harder HTTP cache, needs schema discipline. Apollo Client: normalized cache, hooks. RTK Query: <code>graphqlRequestBaseQuery</code> or custom baseQuery — same tags/cache model you already know.</p>
+        </div>
+      </details>
+
+      <h2 class="section" id="browser">Browser internals</h2>
+
+      <details>
+        <summary><span class="n">01</span> Critical rendering path, DOM, CSSOM, layout, paint, composite</summary>
+        <div class="answer">
+          <p>HTML → DOM. CSS → CSSOM. Combined into the render tree. <strong>Layout</strong> (reflow): geometry. <strong>Paint</strong>: pixels into layers. <strong>Composite</strong>: GPU puts layers on screen. Changing geometry is expensive; transform/opacity can often stay on the compositor. Critical path: bytes to first paint — reduce blocking JS/CSS, minify, prioritize above-the-fold.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">02</span> CORS and storage</summary>
+        <div class="answer">
+          <p>Cross-origin XHR/fetch is blocked from <em>reading</em> the response unless the server sends ACAO headers. Simple vs preflight (OPTIONS). Credentials need <code>Access-Control-Allow-Credentials</code> and a specific origin, not <code>*</code>. Storage: cookies (with attributes), local/sessionStorage, IndexedDB, Cache Storage for SW.</p>
+        </div>
+      </details>
+
+      <h2 class="section" id="webpack">Webpack</h2>
+
+      <details>
+        <summary><span class="n">01</span> Entry, output, loaders, plugins</summary>
+        <div class="answer">
+          <p><strong>Entry</strong> starts the graph. <strong>Output</strong> is the emitted files. <strong>Loaders</strong> transform files (ts-loader, css-loader) as they are imported. <strong>Plugins</strong> hook the whole compile (HtmlWebpackPlugin, DefinePlugin). Vite is often used now, but interviews still ask this model — Rollup/esbuild use the same ideas.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">02</span> SplitChunks, runtime, contenthash, tree shaking, prod, caching</summary>
+        <div class="answer">
+          <p>SplitChunks extracts shared vendor code. Runtime chunk keeps webpack boilerplate separate so contenthash of vendors stays stable. <code>[contenthash]</code> in filenames + long cache headers. Tree shaking (usedExports / sideEffects: false) drops unused ESM. Production mode minifies and sets NODE_ENV. Cache: filesystem cache in webpack 5; browser cache via hashed names.</p>
+        </div>
+      </details>
+
+      <h2 class="section" id="perf">Performance</h2>
+
+      <details>
+        <summary><span class="n">01</span> Code splitting, tree shaking, images, virtualization, memo, bundle analysis</summary>
+        <div class="answer">
+          <p>Split routes and heavy widgets with <code>lazy</code> / dynamic <code>import()</code>. Tree-shake ESM. Images: right size, modern formats, lazy load, CDN. Virtualize long lists (react-window) so you do not mount 10k nodes. Memoize only hot paths. Analyze with source-map-explorer or webpack-bundle-analyzer. Also: debounce input, avoid layout thrash, <code>startTransition</code> for non-urgent UI.</p>
+        </div>
+      </details>
+
+      <h2 class="section" id="sys">Frontend system design</h2>
+
+      <details>
+        <summary><span class="n">01</span> Folder structure, auth, cache, errors, API layer, optimistic UI, state</summary>
+        <div class="answer">
+          <ul>
+            <li><strong>Folders:</strong> by feature (auth/, cart/) with ui + api + model colocated, plus shared/.</li>
+            <li><strong>Auth:</strong> login → tokens (memory + httpOnly cookie preferred) → attach to API → refresh → logout clears cache.</li>
+            <li><strong>Cache:</strong> server state in RTK Query/React Query; UI state in Redux/context/local.</li>
+            <li><strong>Errors:</strong> normalize at the API layer; toast + boundary + field errors.</li>
+            <li><strong>API layer:</strong> one client (base URL, auth, unwrap). UI never raw-fetches.</li>
+            <li><strong>Optimistic UI:</strong> update cache first, rollback on fail.</li>
+            <li><strong>State:</strong> URL for shareable filters, server cache for remote, local for widgets.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2 class="section" id="coding">Must-know coding</h2>
+
+      <details>
+        <summary><span class="n">01</span> GroupBy, Promise.all, LRU</summary>
+        <div class="answer">
+          <pre><code>function groupBy(arr, key) {
+  return arr.reduce((m, x) => {
+    (m[x[key]] ??= []).push(x);
+    return m;
+  }, {});
+}
+
+async function all(promises) {
+  const out = [];
+  for (const p of promises) out.push(await p); // or collect then Promise.all
+  return Promise.all(promises);
+}
+
+class LRU {
+  constructor(limit) { this.limit = limit; this.map = new Map(); }
+  get(k) {
+    if (!this.map.has(k)) return undefined;
+    const v = this.map.get(k);
+    this.map.delete(k); this.map.set(k, v);
+    return v;
+  }
+  set(k, v) {
+    if (this.map.has(k)) this.map.delete(k);
+    this.map.set(k, v);
+    if (this.map.size > this.limit) this.map.delete(this.map.keys().next().value);
+  }
+}</code></pre>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">02</span> UI widgets: Todo, autocomplete, infinite scroll, accordion, tabs, modal, pagination</summary>
+        <div class="answer">
+          <ul>
+            <li><strong>Todo:</strong> list state, add/toggle/delete, keys, controlled input.</li>
+            <li><strong>Autocomplete:</strong> debounce, abort previous fetch, keyboard (arrow/enter/esc), highlight, a11y listbox.</li>
+            <li><strong>Infinite scroll:</strong> IntersectionObserver, page cursor, loading/error, dedupe ids.</li>
+            <li><strong>Accordion/tabs:</strong> one open index (or many), button + panel ids, keyboard.</li>
+            <li><strong>Modal:</strong> portal, focus trap, Esc, scroll lock, return focus.</li>
+            <li><strong>Pagination:</strong> URL page, disable edges, show range.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h2 class="section" id="rn">React Native</h2>
+
+      <details>
+        <summary><span class="n">01</span> JS thread, UI thread, Bridge vs JSI</summary>
+        <div class="answer">
+          <p>JS thread runs React and business logic. UI (main) thread lays out native views. The old <strong>Bridge</strong> serialized JSON async between them — a bottleneck. <strong>JSI</strong> is a C++ interface: JS can hold references to native objects and call them more directly (sync possible). New Architecture uses JSI.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">02</span> Hermes, Turbo Modules, Fabric</summary>
+        <div class="answer">
+          <p><strong>Hermes</strong> is RN’s JS engine: fast startup, bytecode. <strong>Turbo Modules</strong> lazy-load native modules via JSI. <strong>Fabric</strong> is the new renderer: concurrent-ready, C++ shadow tree, aligns with React 18. Native Modules are the JS-callable platform APIs (camera, etc.).</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">03</span> Deep linking, lifecycle, navigation</summary>
+        <div class="answer">
+          <p>Deep links: URL/scheme/universal links map to a screen (React Navigation linking config). Lifecycle: app foreground/background (<code>AppState</code>), not the same as web unload. Navigation: native stack vs JS stack; screens stay mounted depending on navigator; know <code>useFocusEffect</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">04</span> Performance, FlatList, memory</summary>
+        <div class="answer">
+          <p>Avoid passing new inline objects to list items; <code>memo</code> rows; <code>getItemLayout</code> if fixed height; <code>windowSize</code> / <code>initialNumToRender</code> / <code>removeClippedSubviews</code>. Images: size and cache. Reanimated worklets for 60fps gestures on the UI thread. Memory: unmount heavy screens, cap caches, profile with Flipper.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="n">05</span> Offline, push, OTA, permissions</summary>
+        <div class="answer">
+          <p>Offline: persist (MMKV / AsyncStorage / SQLite), queue mutations, show cached RTK/React Query data. Push: OS permission, device token, FCM/APNs, handle notification open. OTA (EAS Update / CodePush): JS bundle updates without store review; native changes still need a binary. Permissions: request in context, handle denied/blocked, iOS plist + Android manifest.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</body>
+</html>

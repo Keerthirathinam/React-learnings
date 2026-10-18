@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interview gist</title>
+  <link rel="stylesheet" href="../assets/css/interview.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="toc">
+      <p class="brand">Theory · Interview</p>
+      <h2>Gist</h2>
+      <a href="#js">JavaScript</a>
+      <a href="#react">React</a>
+      <a href="#ts">TypeScript</a>
+      <a href="#redux">Redux Toolkit</a>
+      <a href="#rtk">RTK Query</a>
+      <a href="#gql">GraphQL</a>
+      <a href="#browser">Browser</a>
+      <a href="#webpack">Webpack</a>
+      <a href="#perf">Performance</a>
+      <a href="#sys">System design</a>
+      <a href="#coding">Coding</a>
+      <a href="#rn">React Native</a>
+    </aside>
+
+    <div class="wrap">
+      <header>
+        <p class="kicker">Say this first</p>
+        <h1>Short answers + deep dives</h1>
+        <p class="lede">One or two sentences you can say out loud, then official docs. Open the deep-dive page when you need examples.</p>
+        <nav class="links">
+          <a href="index.html">Deep dive</a>
+          <a href="../index.html">Theory notes</a>
+          <a href="../../../index.html">Repo home</a>
+        </nav>
+        <input class="search" id="q" type="search" placeholder="Filter topics…" autocomplete="off">
+      </header>
+
+      <h2 class="section" id="js">JavaScript</h2>
+
+      <article class="gist" data-q="execution context">
+        <h4>Execution context</h4>
+        <p class="say">The environment a piece of JS runs in: variables, scope chain, and <code>this</code>. Created for global, each function call, and each module.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Language_overview#execution_contexts" target="_blank" rel="noreferrer">MDN overview</a>
+          <a href="https://javascript.info/execution-context" target="_blank" rel="noreferrer">javascript.info</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="call stack">
+        <h4>Call stack</h4>
+        <p class="say">LIFO stack of function frames. Call pushes, return pops. Async work leaves the stack and comes back later via the event loop.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Glossary/Call_stack" target="_blank" rel="noreferrer">MDN Call stack</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="closures">
+        <h4>Closures</h4>
+        <p class="say">A function that remembers the variables from the place it was created, even after that outer function returned.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures" target="_blank" rel="noreferrer">MDN Closures</a>
+          <a href="https://javascript.info/closure" target="_blank" rel="noreferrer">javascript.info</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="hoisting">
+        <h4>Hoisting</h4>
+        <p class="say">Declarations are registered before the body runs. <code>var</code> becomes <code>undefined</code>; <code>let</code>/<code>const</code> stay in the TDZ; function declarations are fully available.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Glossary/Hoisting" target="_blank" rel="noreferrer">MDN Hoisting</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="scope">
+        <h4>Scope</h4>
+        <p class="say">Where a name is visible. JS is lexically scoped: look at where the function is written, then walk outward.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Glossary/Scope" target="_blank" rel="noreferrer">MDN Scope</a>
+          <a href="https://javascript.info/closure#lexical-environment" target="_blank" rel="noreferrer">Lexical environment</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="this">
+        <h4>this</h4>
+        <p class="say">For regular functions, <code>this</code> is decided by the call site (method, bare, <code>new</code>, bind). Arrows inherit <code>this</code> from the enclosing scope.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this" target="_blank" rel="noreferrer">MDN this</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="promises">
+        <h4>Promises</h4>
+        <p class="say">An object for a future value: pending → fulfilled or rejected. Chain with then/catch; always handle rejection.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" rel="noreferrer">MDN Promise</a>
+          <a href="https://javascript.info/promise-basics" target="_blank" rel="noreferrer">javascript.info</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="async await">
+        <h4>async / await</h4>
+        <p class="say">Syntax over promises. <code>async</code> returns a promise; <code>await</code> pauses that function and unwraps or throws. Use try/catch and Promise.all for parallel work.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function" target="_blank" rel="noreferrer">MDN async</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="event loop">
+        <h4>Event loop</h4>
+        <p class="say">Run the stack, drain microtasks, then one macrotask, then maybe render. That is why Promise.then beats setTimeout(0).</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop" target="_blank" rel="noreferrer">MDN Event loop</a>
+          <a href="https://javascript.info/event-loop" target="_blank" rel="noreferrer">javascript.info</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="map set">
+        <h4>Map / Set</h4>
+        <p class="say">Map: any-key dictionary with insertion order. Set: unique values. Prefer over objects when keys are not strings.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map" target="_blank" rel="noreferrer">MDN Map</a>
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set" target="_blank" rel="noreferrer">MDN Set</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="prototype oops">
+        <h4>Prototype &amp; OOP basics</h4>
+        <p class="say">Objects delegate missing properties up [[Prototype]]. Shared methods live on <code>Fn.prototype</code>. Classes are sugar over this chain.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain" target="_blank" rel="noreferrer">MDN prototype chain</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="classes">
+        <h4>Classes</h4>
+        <p class="say">Constructor + prototype methods + <code>extends</code>/<code>super</code>. Not hoisted like functions. Prefer composition when the tree gets deep.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes" target="_blank" rel="noreferrer">MDN Classes</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="modules esm cjs">
+        <h4>Modules (ESM vs CJS)</h4>
+        <p class="say">ESM is static, tree-shakeable, live bindings. CJS is sync <code>require</code> with a snapshot of exports. Browsers need <code>type="module"</code>.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules" target="_blank" rel="noreferrer">MDN Modules</a>
+          <a href="https://nodejs.org/api/esm.html" target="_blank" rel="noreferrer">Node ESM</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="deep shallow copy">
+        <h4>Deep vs shallow copy</h4>
+        <p class="say">Shallow copies one level; nested refs are shared. Deep clones the graph. Use <code>structuredClone</code>; JSON drops functions and dates.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/structuredClone" target="_blank" rel="noreferrer">structuredClone</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="currying">
+        <h4>Currying</h4>
+        <p class="say">Turn <code>f(a,b,c)</code> into <code>f(a)(b)(c)</code> so you can pre-fill arguments and reuse the rest.</p>
+        <div class="resources">
+          <a href="https://javascript.info/currying-partials" target="_blank" rel="noreferrer">javascript.info</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="memoization">
+        <h4>Memoization</h4>
+        <p class="say">Cache results of a pure function by arguments. Worth it only when work is expensive and inputs repeat.</p>
+        <div class="resources">
+          <a href="https://react.dev/reference/react/useMemo" target="_blank" rel="noreferrer">React useMemo</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="var let const">
+        <h4>var / let / const</h4>
+        <p class="say"><code>const</code> by default, <code>let</code> if you reassign, never <code>var</code>. var is function-scoped and hoisted to undefined.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let" target="_blank" rel="noreferrer">MDN let</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="regular arrow">
+        <h4>Regular vs arrow</h4>
+        <p class="say">Regular functions get their own <code>this</code> and can be constructors. Arrows are lexical <code>this</code>, no <code>arguments</code>, not constructable.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions" target="_blank" rel="noreferrer">MDN arrows</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="call apply bind">
+        <h4>call / apply / bind</h4>
+        <p class="say">call and apply invoke now (list vs array of args). bind returns a new function with locked <code>this</code>.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind" target="_blank" rel="noreferrer">MDN bind</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="iife">
+        <h4>IIFE</h4>
+        <p class="say">A function you define and run immediately to get a private scope. Modules replaced most of this.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Glossary/IIFE" target="_blank" rel="noreferrer">MDN IIFE</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="callback">
+        <h4>Callbacks</h4>
+        <p class="say">A function you pass to be called later. Nesting them is messy; promises flatten the same idea.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Glossary/Callback_function" target="_blank" rel="noreferrer">MDN callback</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="microtask macrotask">
+        <h4>Microtasks vs macrotasks</h4>
+        <p class="say">Microtasks (promises) run before the next timer/UI task. Starving the microtask queue blocks paint.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide" target="_blank" rel="noreferrer">MDN microtasks</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="promise.all race allsettled">
+        <h4>Promise.all / race / allSettled</h4>
+        <p class="say">all fails fast; allSettled waits for every result; race takes the first settle (timeouts). Check <code>ok</code> on fetch yourself.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all" target="_blank" rel="noreferrer">MDN all</a>
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled" target="_blank" rel="noreferrer">allSettled</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="destructuring spread rest optional chaining nullish map filter reduce">
+        <h4>Destructuring, spread/rest, ?., ??, map/filter/reduce</h4>
+        <p class="say">Unpack and copy without mutate. <code>?.</code> stops on nullish. <code>??</code> only replaces null/undefined. map/filter/reduce are the core list tools.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining" target="_blank" rel="noreferrer">Optional chaining</a>
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing" target="_blank" rel="noreferrer">Nullish</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="object.freeze">
+        <h4>Object.freeze</h4>
+        <p class="say">Shallow lock: no add/remove/reassign of own keys. Nested objects can still change.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze" target="_blank" rel="noreferrer">MDN freeze</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="debounce throttle deepclone flatten">
+        <h4>Debounce, throttle, deepClone, flatten</h4>
+        <p class="say">Debounce: fire after silence. Throttle: fire at most once per window. Clone with structuredClone. Flatten with flat(Infinity) or recurse.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat" target="_blank" rel="noreferrer">Array.flat</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="event bubbling listeners">
+        <h4>Event bubbling &amp; listeners</h4>
+        <p class="say">Capture down, bubble up. addEventListener options: capture, once, passive, signal. Remove or abort on teardown.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/Event_bubbling" target="_blank" rel="noreferrer">MDN bubbling</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="higher order function">
+        <h4>Higher-order function</h4>
+        <p class="say">Takes or returns a function. map, debounce, and React HOCs are HOFs.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Glossary/First-class_Function" target="_blank" rel="noreferrer">First-class functions</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="localstorage sessionstorage settimeout window">
+        <h4>Browser APIs: storage, setTimeout, window</h4>
+        <p class="say">localStorage lasts; sessionStorage is per tab; both are strings and XSS-visible. setTimeout is a macrotask. window is the browser global.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage" target="_blank" rel="noreferrer">localStorage</a>
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/setTimeout" target="_blank" rel="noreferrer">setTimeout</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="xss csrf sop csp encryption hashing">
+        <h4>Security: XSS, CSRF, SOP, CSP, encrypt vs hash</h4>
+        <p class="say">XSS runs attacker JS. CSRF rides your cookies. SOP blocks cross-origin reads. CSP allowlists scripts. Encryption is reversible; hashing is not.</p>
+        <div class="resources">
+          <a href="https://owasp.org/www-community/attacks/xss/" target="_blank" rel="noreferrer">OWASP XSS</a>
+          <a href="https://owasp.org/www-community/attacks/csrf" target="_blank" rel="noreferrer">OWASP CSRF</a>
+          <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP" target="_blank" rel="noreferrer">MDN CSP</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="garbage collection memory leaks">
+        <h4>Garbage collection &amp; memory leaks</h4>
+        <p class="say">GC frees unreachable objects. Leaks are leftover listeners, timers, caches, and closures that still point at big data.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Memory_management" target="_blank" rel="noreferrer">MDN memory</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="weakmap weakset">
+        <h4>WeakMap / WeakSet</h4>
+        <p class="say">Object keys/values held weakly so GC can drop them. Not iterable. Use for caches and private metadata.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap" target="_blank" rel="noreferrer">MDN WeakMap</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="symbols">
+        <h4>Symbols</h4>
+        <p class="say">Unique keys that will not collide. Also power well-known hooks like <code>Symbol.iterator</code>.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol" target="_blank" rel="noreferrer">MDN Symbol</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="iterators generators">
+        <h4>Iterators &amp; generators</h4>
+        <p class="say">Iterator: next() → {value, done}. Generator: function* that yields and pauses. for…of uses [Symbol.iterator].</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_generators" target="_blank" rel="noreferrer">MDN iterators</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="event delegation">
+        <h4>Event delegation</h4>
+        <p class="say">One listener on a parent; inspect event.target. Works for items added later.</p>
+        <div class="resources">
+          <a href="https://javascript.info/event-delegation" target="_blank" rel="noreferrer">javascript.info</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="abortcontroller">
+        <h4>AbortController</h4>
+        <p class="say">Pass signal to fetch/listeners; abort() cancels them. Use on unmount and on stale search.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortController" target="_blank" rel="noreferrer">MDN AbortController</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="fetch lifecycle">
+        <h4>Fetch lifecycle</h4>
+        <p class="say">Request → CORS → network → headers → body. Promise rejects on network fail, not on 404. Always check response.ok, then parse once.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch" target="_blank" rel="noreferrer">MDN Fetch</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="regex">
+        <h4>Regex</h4>
+        <p class="say">Patterns for test/match/replace. Know flags and that a global regex keeps lastIndex.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions" target="_blank" rel="noreferrer">MDN regex</a>
+        </div>
+      </article>
+
+      <h2 class="section" id="react">React</h2>
+
+      <article class="gist" data-q="virtual dom">
+        <h4>Virtual DOM</h4>
+        <p class="say">A JS description of the UI. React diffs it and patches the real DOM. Predictable updates, not magic speed.</p>
+        <div class="resources">
+          <a href="https://react.dev/learn/preserving-and-resetting-state" target="_blank" rel="noreferrer">react.dev state/trees</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="components">
+        <h4>Basic components</h4>
+        <p class="say">Functions that take props and return UI. Keep render pure; side effects go in effects or event handlers.</p>
+        <div class="resources">
+          <a href="https://react.dev/learn/your-first-component" target="_blank" rel="noreferrer">Your first component</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="fiber">
+        <h4>Fiber</h4>
+        <p class="say">React’s unit of work. Lets render pause, resume, and abort — the base of concurrent features.</p>
+        <div class="resources">
+          <a href="https://github.com/acdlite/react-fiber-architecture" target="_blank" rel="noreferrer">Fiber architecture notes</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="reconciliation keys">
+        <h4>Reconciliation &amp; keys</h4>
+        <p class="say">Compare type + key. Keys identify siblings across renders. Index keys break when the list reorders.</p>
+        <div class="resources">
+          <a href="https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key" target="_blank" rel="noreferrer">Why keys</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="hooks custom hooks">
+        <h4>Hooks &amp; custom hooks</h4>
+        <p class="say">Top-level only, same order every render. Custom hooks reuse stateful logic, not JSX.</p>
+        <div class="resources">
+          <a href="https://react.dev/reference/react/hooks" target="_blank" rel="noreferrer">Hooks API</a>
+          <a href="https://react.dev/learn/reusing-logic-with-custom-hooks" target="_blank" rel="noreferrer">Custom hooks</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="context">
+        <h4>Context API</h4>
+        <p class="say">Pass data through the tree without props. Consumers re-render when the value identity changes.</p>
+        <div class="resources">
+          <a href="https://react.dev/learn/passing-data-deeply-with-context" target="_blank" rel="noreferrer">Context</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="react.memo usecallback usememo">
+        <h4>React.memo / useMemo / useCallback</h4>
+        <p class="say">Skip work when inputs are the same. memo = component, useMemo = value, useCallback = function identity.</p>
+        <div class="resources">
+          <a href="https://react.dev/reference/react/memo" target="_blank" rel="noreferrer">memo</a>
+          <a href="https://react.dev/reference/react/useCallback" target="_blank" rel="noreferrer">useCallback</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="portals">
+        <h4>Portals</h4>
+        <p class="say">Render into a DOM node outside the parent (modals). React events still bubble through React.</p>
+        <div class="resources">
+          <a href="https://react.dev/reference/react-dom/createPortal" target="_blank" rel="noreferrer">createPortal</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="error boundaries">
+        <h4>Error boundaries</h4>
+        <p class="say">Catch render errors in a subtree and show fallback. Not for event handlers or async.</p>
+        <div class="resources">
+          <a href="https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary" target="_blank" rel="noreferrer">Error boundaries</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="suspense lazy">
+        <h4>Suspense &amp; lazy loading</h4>
+        <p class="say">lazy() splits a component; Suspense shows fallback while it loads (and while some data waits).</p>
+        <div class="resources">
+          <a href="https://react.dev/reference/react/lazy" target="_blank" rel="noreferrer">lazy</a>
+          <a href="https://react.dev/reference/react/Suspense" target="_blank" rel="noreferrer">Suspense</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="navigation">
+        <h4>Navigation</h4>
+        <p class="say">URL → component tree. Use Link for client routing; keep shareable state in the URL.</p>
+        <div class="resources">
+          <a href="https://reactrouter.com/en/main/start/overview" target="_blank" rel="noreferrer">React Router</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="usestate object array">
+        <h4>useState object/array updates</h4>
+        <p class="say">Replace state, do not mutate. Spread copies; use the functional updater when next depends on prev.</p>
+        <div class="resources">
+          <a href="https://react.dev/reference/react/useState" target="_blank" rel="noreferrer">useState</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="useeffect deps cleanup stale">
+        <h4>useEffect deps, cleanup, closures</h4>
+        <p class="say">After paint. List every value you read. Cleanup cancels timers/fetches. Missing deps = stale closure.</p>
+        <div class="resources">
+          <a href="https://react.dev/reference/react/useEffect" target="_blank" rel="noreferrer">useEffect</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="useref">
+        <h4>useRef</h4>
+        <p class="say">Mutable box that survives renders without re-rendering. DOM nodes, ids, latest values.</p>
+        <div class="resources">
+          <a href="https://react.dev/reference/react/useRef" target="_blank" rel="noreferrer">useRef</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="usecontext usereducer">
+        <h4>useContext / useReducer</h4>
+        <p class="say">useContext reads a provider. useReducer is setState for many transitions: (state, action) → next.</p>
+        <div class="resources">
+          <a href="https://react.dev/reference/react/useContext" target="_blank" rel="noreferrer">useContext</a>
+          <a href="https://react.dev/reference/react/useReducer" target="_blank" rel="noreferrer">useReducer</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="controlled composition render props hoc lifting compound">
+        <h4>Component patterns</h4>
+        <p class="say">Controlled = React owns value. Compose with children. Render props/HOCs share logic (hooks preferred). Lift state up. Compound components share implicit context.</p>
+        <div class="resources">
+          <a href="https://react.dev/learn/sharing-state-between-components" target="_blank" rel="noreferrer">Lifting state</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="pagination rendering concurrent batching">
+        <h4>Pagination, lifecycle, concurrent, batching</h4>
+        <p class="say">Page in the URL. Render is pure; commit then effects. Concurrent work can be discarded. React 18 batches setState almost everywhere.</p>
+        <div class="resources">
+          <a href="https://react.dev/learn/queueing-a-series-of-state-updates" target="_blank" rel="noreferrer">Batching</a>
+          <a href="https://react.dev/blog/2022/03/29/react-v18#new-feature-automatic-batching" target="_blank" rel="noreferrer">React 18 batching</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="stale closures race conditions">
+        <h4>Stale closures &amp; useEffect races</h4>
+        <p class="say">Old render’s function still sees old state. Late fetch overwrites new data. Fix with deps, functional updates, abort.</p>
+        <div class="resources">
+          <a href="https://react.dev/learn/synchronizing-with-effects#fetching-data" target="_blank" rel="noreferrer">Fetching in effects</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="forwardref useimperativehandle">
+        <h4>forwardRef / useImperativeHandle</h4>
+        <p class="say">Let a parent hold a child ref. Imperative handle exposes a small API (focus) instead of the whole node.</p>
+        <div class="resources">
+          <a href="https://react.dev/reference/react/useImperativeHandle" target="_blank" rel="noreferrer">useImperativeHandle</a>
+          <a href="https://react.dev/reference/react/forwardRef" target="_blank" rel="noreferrer">forwardRef</a>
+        </div>
+      </article>
+
+      <h2 class="section" id="ts">TypeScript</h2>
+
+      <article class="gist" data-q="interface vs type">
+        <h4>Interface vs type</h4>
+        <p class="say">Interfaces merge and describe objects. Types can be unions, tuples, mapped types. Both work for props.</p>
+        <div class="resources">
+          <a href="https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#differences-between-type-aliases-and-interfaces" target="_blank" rel="noreferrer">TS handbook</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="generics">
+        <h4>Generics</h4>
+        <p class="say">Type parameters so a function/component stays typed for whatever the caller passes. Constrain with extends.</p>
+        <div class="resources">
+          <a href="https://www.typescriptlang.org/docs/handbook/2/generics.html" target="_blank" rel="noreferrer">Generics</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="union intersection">
+        <h4>Union / intersection</h4>
+        <p class="say">A | B is one of them (narrow it). A &amp; B is both. Prefer discriminated unions for state machines.</p>
+        <div class="resources">
+          <a href="https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#union-types" target="_blank" rel="noreferrer">Unions</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="utility types partial pick omit record">
+        <h4>Utility types</h4>
+        <p class="say">Partial, Pick, Omit, Record reshape existing types instead of rewriting them.</p>
+        <div class="resources">
+          <a href="https://www.typescriptlang.org/docs/handbook/utility-types.html" target="_blank" rel="noreferrer">Utility types</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="enums const assertion">
+        <h4>Enums vs const assertion</h4>
+        <p class="say">Prefer <code>as const</code> objects + a value union. Numeric enums have odd runtime reverse maps.</p>
+        <div class="resources">
+          <a href="https://www.typescriptlang.org/docs/handbook/enums.html" target="_blank" rel="noreferrer">Enums</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="react props events typescript">
+        <h4>Typing React props and events</h4>
+        <p class="say">Type props as an object. Events: React.ChangeEvent&lt;HTMLInputElement&gt;. Or ComponentProps&lt;"button"&gt;.</p>
+        <div class="resources">
+          <a href="https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/basic_type_example" target="_blank" rel="noreferrer">React+TS cheatsheet</a>
+        </div>
+      </article>
+
+      <h2 class="section" id="redux">Redux Toolkit</h2>
+
+      <article class="gist" data-q="createslice reducers actions">
+        <h4>createSlice, reducers, actions</h4>
+        <p class="say">One call writes reducers and action creators. Inside those reducers you “mutate” a draft; Immer makes it immutable.</p>
+        <div class="resources">
+          <a href="https://redux-toolkit.js.org/api/createSlice" target="_blank" rel="noreferrer">createSlice</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="configurestore">
+        <h4>configureStore</h4>
+        <p class="say">Wires reducers, thunk, DevTools, and good defaults. Add RTK Query middleware here.</p>
+        <div class="resources">
+          <a href="https://redux-toolkit.js.org/api/configureStore" target="_blank" rel="noreferrer">configureStore</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="useselector usedispatch">
+        <h4>useSelector / useDispatch</h4>
+        <p class="say">Select a small slice or you re-render too much. Dispatch typed actions. Memoize derived data.</p>
+        <div class="resources">
+          <a href="https://react-redux.js.org/api/hooks" target="_blank" rel="noreferrer">React-Redux hooks</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="immer">
+        <h4>Immer — when not to</h4>
+        <p class="say">Do not mutate and also return a new object. Do not treat class instances as drafts. Outside a produce/reducer, mutate nothing.</p>
+        <div class="resources">
+          <a href="https://redux-toolkit.js.org/usage/immer-reducers" target="_blank" rel="noreferrer">Immer in RTK</a>
+        </div>
+      </article>
+
+      <h2 class="section" id="rtk">RTK Query</h2>
+
+      <article class="gist" data-q="createapi endpoints">
+        <h4>createApi &amp; endpoints</h4>
+        <p class="say">Define baseQuery plus query/mutation endpoints. You get hooks and a cache reducer for free.</p>
+        <div class="resources">
+          <a href="https://redux-toolkit.js.org/rtk-query/overview" target="_blank" rel="noreferrer">RTK Query overview</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="tags invalidation caching">
+        <h4>Tags, invalidation, caching</h4>
+        <p class="say">Queries provide tags; mutations invalidate them so data refetches. Cache key is endpoint + args.</p>
+        <div class="resources">
+          <a href="https://redux-toolkit.js.org/rtk-query/usage/automated-refetching" target="_blank" rel="noreferrer">Automated refetching</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="optimistic skip transformresponse">
+        <h4>Optimistic updates, skip, transformResponse</h4>
+        <p class="say">Patch cache first, undo on fail. skip/skipToken waits for an id. transformResponse shapes data before cache.</p>
+        <div class="resources">
+          <a href="https://redux-toolkit.js.org/rtk-query/usage/manual-cache-updates" target="_blank" rel="noreferrer">Cache updates</a>
+        </div>
+      </article>
+
+      <h2 class="section" id="gql">GraphQL</h2>
+
+      <article class="gist" data-q="graphql queries mutations variables fragments">
+        <h4>Queries, mutations, variables, fragments</h4>
+        <p class="say">Ask for a shape. Mutations write. Variables are typed args. Fragments reuse fields.</p>
+        <div class="resources">
+          <a href="https://graphql.org/learn/queries/" target="_blank" rel="noreferrer">graphql.org queries</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="graphql rest apollo rtk">
+        <h4>Errors, REST tradeoff, Apollo / RTK</h4>
+        <p class="say">GQL can 200 with an errors array. REST is simpler to cache; GQL is flexible. Apollo normalizes; RTK Query can still wrap GQL.</p>
+        <div class="resources">
+          <a href="https://www.apollographql.com/docs/react" target="_blank" rel="noreferrer">Apollo Client</a>
+          <a href="https://redux-toolkit.js.org/rtk-query/usage/customizing-queries#graphql-basequery" target="_blank" rel="noreferrer">RTK + GraphQL</a>
+        </div>
+      </article>
+
+      <h2 class="section" id="browser">Browser internals</h2>
+
+      <article class="gist" data-q="critical rendering path dom cssom layout paint composite">
+        <h4>Critical path: DOM / CSSOM / layout / paint / composite</h4>
+        <p class="say">Parse HTML and CSS, build a render tree, measure, paint layers, composite. Geometry changes are costly; transform/opacity often are not.</p>
+        <div class="resources">
+          <a href="https://web.dev/articles/critical-rendering-path" target="_blank" rel="noreferrer">web.dev CRP</a>
+          <a href="https://web.dev/articles/rendering-performance" target="_blank" rel="noreferrer">Rendering performance</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="cors storage">
+        <h4>CORS &amp; storage</h4>
+        <p class="say">Browsers hide cross-origin responses unless the server opts in. Cookies vs web storage vs IndexedDB have different lifetimes and XSS risk.</p>
+        <div class="resources">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS" target="_blank" rel="noreferrer">MDN CORS</a>
+        </div>
+      </article>
+
+      <h2 class="section" id="webpack">Webpack</h2>
+
+      <article class="gist" data-q="entry output loaders plugins">
+        <h4>Entry, output, loaders, plugins</h4>
+        <p class="say">Entry starts the graph; output emits files; loaders transform imports; plugins hook the compiler.</p>
+        <div class="resources">
+          <a href="https://webpack.js.org/concepts/" target="_blank" rel="noreferrer">Webpack concepts</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="splitchunks runtime contenthash treeshaking production caching">
+        <h4>SplitChunks, runtime, hash, tree shaking, prod, cache</h4>
+        <p class="say">Extract vendors, isolate runtime, hash filenames for long cache, drop unused ESM, minify in production.</p>
+        <div class="resources">
+          <a href="https://webpack.js.org/guides/code-splitting/" target="_blank" rel="noreferrer">Code splitting</a>
+          <a href="https://webpack.js.org/guides/caching/" target="_blank" rel="noreferrer">Caching</a>
+        </div>
+      </article>
+
+      <h2 class="section" id="perf">Performance</h2>
+
+      <article class="gist" data-q="code splitting tree shaking images virtualization memoization bundle">
+        <h4>FE performance checklist</h4>
+        <p class="say">Split routes, shake unused code, size images, virtualize long lists, memoize hot paths, inspect the bundle.</p>
+        <div class="resources">
+          <a href="https://web.dev/explore/fast" target="_blank" rel="noreferrer">web.dev Fast</a>
+          <a href="https://react.dev/learn/render-and-commit" target="_blank" rel="noreferrer">Render and commit</a>
+        </div>
+      </article>
+
+      <h2 class="section" id="sys">Frontend system design</h2>
+
+      <article class="gist" data-q="folder auth caching errors api optimistic state">
+        <h4>Folders, auth, cache, errors, API, optimistic UI, state</h4>
+        <p class="say">Feature folders. Auth at the client boundary. Server cache ≠ UI state. Normalize errors. One API module. Optimistic then rollback. URL for shareable state.</p>
+        <div class="resources">
+          <a href="https://redux.js.org/usage/structuring-reducers/basic-reducer-structure" target="_blank" rel="noreferrer">State structure</a>
+          <a href="https://redux-toolkit.js.org/rtk-query/usage/examples" target="_blank" rel="noreferrer">RTK Query examples</a>
+        </div>
+      </article>
+
+      <h2 class="section" id="coding">Must-know coding</h2>
+
+      <article class="gist" data-q="groupby promise.all lru todo autocomplete infinite accordion tabs modal pagination">
+        <h4>Interview machines</h4>
+        <p class="say">Be able to write debounce/throttle/flatten/clone, groupBy, Promise.all, LRU (Map), plus Todo, autocomplete (abort+keyboard), infinite scroll (IO), accordion/tabs, modal (portal+focus), pagination.</p>
+        <div class="resources">
+          <a href="index.html#coding">Deep-dive snippets</a>
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" target="_blank" rel="noreferrer">Intersection Observer</a>
+        </div>
+      </article>
+
+      <h2 class="section" id="rn">React Native</h2>
+
+      <article class="gist" data-q="js thread ui thread bridge jsi">
+        <h4>JS thread, UI thread, Bridge vs JSI</h4>
+        <p class="say">JS runs React; UI thread draws native views. The old Bridge serialized JSON. JSI calls native more directly.</p>
+        <div class="resources">
+          <a href="https://reactnative.dev/docs/the-new-architecture/landing-page" target="_blank" rel="noreferrer">New Architecture</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="hermes turbo fabric native modules">
+        <h4>Hermes, Turbo Modules, Fabric, native modules</h4>
+        <p class="say">Hermes = RN JS engine. Turbo Modules lazy native via JSI. Fabric = new renderer. Native modules expose platform APIs.</p>
+        <div class="resources">
+          <a href="https://reactnative.dev/docs/hermes" target="_blank" rel="noreferrer">Hermes</a>
+          <a href="https://reactnative.dev/docs/turbo-native-modules-introduction" target="_blank" rel="noreferrer">Turbo Native Modules</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="deep linking lifecycle navigation">
+        <h4>Deep linking, lifecycle, navigation</h4>
+        <p class="say">Map URLs to screens. AppState for background. Navigators decide which screens stay mounted.</p>
+        <div class="resources">
+          <a href="https://reactnavigation.org/docs/deep-linking" target="_blank" rel="noreferrer">Deep linking</a>
+          <a href="https://reactnative.dev/docs/appstate" target="_blank" rel="noreferrer">AppState</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="flatlist performance memory">
+        <h4>Performance, FlatList, memory</h4>
+        <p class="say">Memo rows, getItemLayout, tune windowSize. Move animations off JS (Reanimated). Cap caches.</p>
+        <div class="resources">
+          <a href="https://reactnative.dev/docs/optimizing-flatlist-configuration" target="_blank" rel="noreferrer">FlatList tuning</a>
+        </div>
+      </article>
+
+      <article class="gist" data-q="offline push ota permissions">
+        <h4>Offline, push, OTA, permissions</h4>
+        <p class="say">Persist + queue writes. FCM/APNs for push. OTA updates JS only. Ask permissions in context; respect denied.</p>
+        <div class="resources">
+          <a href="https://docs.expo.dev/push-notifications/overview/" target="_blank" rel="noreferrer">Expo push</a>
+          <a href="https://docs.expo.dev/eas-update/introduction/" target="_blank" rel="noreferrer">EAS Update</a>
+        </div>
+      </article>
+    </div>
+  </div>
+  <script>
+    const q = document.getElementById("q");
+    const cards = [...document.querySelectorAll(".gist")];
+    q.addEventListener("input", () => {
+      const needle = q.value.trim().toLowerCase();
+      cards.forEach((el) => {
+        const hay = (el.dataset.q + " " + el.innerText).toLowerCase();
+        el.style.display = !needle || hay.includes(needle) ? "" : "none";
+      });
+    });
+  </script>
+</body>
+</html>

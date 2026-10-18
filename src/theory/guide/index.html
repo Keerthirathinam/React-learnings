@@ -1,0 +1,3066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InvoiceCloud — 2-Day Learning Guide</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --surface2: #243044;
+      --border: #2d3a4f;
+      --text: #e6edf3;
+      --muted: #8b9cb3;
+      --accent: #3b82f6;
+      --accent2: #22c55e;
+      --warn: #f59e0b;
+      --error: #ef4444;
+      --purple: #a78bfa;
+      --radius: 10px;
+      --sidebar-w: 280px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    nav.sidebar {
+      width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 1.25rem;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    nav.sidebar h1 {
+      font-size: 1rem;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+
+    nav.sidebar .subtitle {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    nav.sidebar a {
+      display: block;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      margin-bottom: 2px;
+    }
+
+    nav.sidebar a:hover, nav.sidebar a.active {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    nav.sidebar .nav-group {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 1rem 0 0.4rem 0.6rem;
+    }
+
+    /* Main */
+    main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      padding: 2rem 2.5rem 4rem;
+      max-width: 920px;
+    }
+
+    section { display: none; }
+    section.active { display: block; }
+
+    h2 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.5rem;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      margin: 1.75rem 0 0.75rem;
+      color: var(--accent);
+    }
+
+    h4 {
+      font-size: 0.95rem;
+      margin: 1.25rem 0 0.5rem;
+      color: var(--purple);
+    }
+
+    p, li { color: #c9d4e3; font-size: 0.92rem; }
+    p { margin-bottom: 0.75rem; }
+    ul, ol { margin: 0.5rem 0 1rem 1.25rem; }
+    li { margin-bottom: 0.35rem; }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 99px;
+      font-weight: 600;
+      margin-right: 0.35rem;
+    }
+    .badge-day1 { background: #1e3a5f; color: #60a5fa; }
+    .badge-day2 { background: #1a3d2e; color: #4ade80; }
+    .badge-ai   { background: #3b2f5e; color: #c4b5fd; }
+    .badge-time { background: var(--surface2); color: var(--muted); }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+
+    .card.why { border-left: 3px solid var(--accent); }
+    .card.do  { border-left: 3px solid var(--accent2); }
+    .card.warn { border-left: 3px solid var(--warn); }
+    .card.interview { border-left: 3px solid var(--purple); }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.6rem;
+    }
+    .card.why .card-title { color: var(--accent); }
+    .card.do  .card-title { color: var(--accent2); }
+    .card.warn .card-title { color: var(--warn); }
+    .card.interview .card-title { color: var(--purple); }
+
+    code, pre {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+    }
+
+    code {
+      background: var(--surface2);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      color: #7dd3fc;
+    }
+
+    pre {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      overflow-x: auto;
+      margin: 0.75rem 0;
+      color: #e6edf3;
+    }
+
+    .progress-bar {
+      background: var(--surface2);
+      border-radius: 99px;
+      height: 8px;
+      margin: 1rem 0 2rem;
+      overflow: hidden;
+    }
+    .progress-fill {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      height: 100%;
+      width: 0%;
+      transition: width 0.4s;
+    }
+
+    .phase-checklist label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      cursor: pointer;
+      font-size: 0.88rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .phase-checklist input { margin-top: 0.25rem; accent-color: var(--accent2); }
+    .phase-checklist label.done span { text-decoration: line-through; color: var(--muted); }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      padding: 0.75rem;
+      font-family: inherit;
+      font-size: 0.88rem;
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    input[type="text"] { min-height: auto; }
+
+    .btn-row { display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
+
+    button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    button:hover { opacity: 0.9; }
+    button.secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    button.danger { background: var(--error); }
+
+    .entry-list { margin-top: 1rem; }
+    .entry {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.85rem 1rem;
+      margin-bottom: 0.6rem;
+      position: relative;
+    }
+    .entry-meta {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    .entry pre { margin: 0.5rem 0 0; font-size: 0.78rem; }
+    .entry .delete-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+    }
+
+    .timeline {
+      border-left: 2px solid var(--border);
+      margin-left: 0.5rem;
+      padding-left: 1.25rem;
+    }
+    .timeline-item { margin-bottom: 1.5rem; position: relative; }
+    .timeline-item::before {
+      content: '';
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      position: absolute;
+      left: -1.45rem;
+      top: 0.35rem;
+    }
+
+    .resume-box {
+      background: linear-gradient(135deg, #1a2332, #1e2d45);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      font-style: italic;
+      color: #b8cfe8;
+      margin: 1rem 0;
+    }
+
+    .file-explainer {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin: 0.75rem 0;
+      overflow: hidden;
+    }
+    .file-explainer summary {
+      cursor: pointer;
+      padding: 0.85rem 1rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface2);
+    }
+    .file-explainer summary::-webkit-details-marker { display: none; }
+    .file-explainer summary::before { content: '▶'; font-size: 0.65rem; color: var(--accent); }
+    .file-explainer[open] summary::before { content: '▼'; }
+    .file-explainer .file-body {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+    .file-explainer .file-role {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 0.1rem 0.45rem;
+      border-radius: 4px;
+      background: #1e3a5f;
+      color: #60a5fa;
+      margin-bottom: 0.5rem;
+    }
+    .file-explainer .analogy {
+      background: #1a2e1a;
+      border-left: 3px solid var(--accent2);
+      padding: 0.6rem 0.85rem;
+      margin: 0.75rem 0;
+      font-size: 0.85rem;
+      color: #a7d4a7;
+      border-radius: 0 6px 6px 0;
+    }
+
+    /* Interview Q&A dropdowns */
+    .interview-qa { margin-top: 0.75rem; }
+    .interview-qa > p.hint {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    .iq-dropdown {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      overflow: hidden;
+    }
+    .iq-dropdown summary {
+      cursor: pointer;
+      padding: 0.75rem 1rem;
+      font-size: 0.88rem;
+      font-weight: 500;
+      list-style: none;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      line-height: 1.45;
+    }
+    .iq-dropdown summary::-webkit-details-marker { display: none; }
+    .iq-dropdown summary::before {
+      content: 'Q';
+      flex-shrink: 0;
+      width: 1.35rem;
+      height: 1.35rem;
+      background: #3b2f5e;
+      color: var(--purple);
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.1rem;
+    }
+    .iq-dropdown[open] summary {
+      border-bottom: 1px solid var(--border);
+      background: #1e1a2e;
+    }
+    .iq-dropdown[open] summary::before {
+      content: 'A';
+      background: #1a3d2e;
+      color: var(--accent2);
+    }
+    .iq-answer {
+      padding: 0.85rem 1rem 0.85rem 2.75rem;
+      font-size: 0.86rem;
+      color: #c9d4e3;
+      line-height: 1.6;
+      border-left: 3px solid var(--accent2);
+      margin: 0;
+    }
+    .iq-answer strong { color: var(--accent2); }
+    .iq-answer code {
+      font-size: 0.8rem;
+    }
+
+    .phase-status {
+      display: inline-block;
+      font-size: 0.72rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 99px;
+      font-weight: 600;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+    .phase-status.done { background: #1a3d2e; color: #4ade80; }
+    .phase-status.current { background: #1e3a5f; color: #60a5fa; }
+    .phase-status.pending { background: var(--surface2); color: var(--muted); }
+
+    @media (max-width: 768px) {
+      nav.sidebar { display: none; }
+      main { margin-left: 0; padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <h1>InvoiceCloud Guide</h1>
+  <p class="subtitle">Your 2-day mentor notebook</p>
+
+  <div class="nav-group">Overview</div>
+  <a href="#home" class="nav-link active">🏠 Home & Plan</a>
+  <a href="#how-to-use" class="nav-link">📖 How to Use This Guide</a>
+
+  <div class="nav-group">Day 1 — Invoice Dashboard</div>
+  <a href="#p1-phase0" class="nav-link">Phase 0: Setup</a>
+  <a href="#p1-phase1" class="nav-link">Phase 1: Webpack</a>
+  <a href="#p1-phase2" class="nav-link">Phase 2: React + TS</a>
+  <a href="#p1-phase3" class="nav-link">Phase 3: GraphQL + Apollo</a>
+  <a href="#p1-phase4" class="nav-link">Phase 4: MUI + Theme</a>
+  <a href="#p1-phase5" class="nav-link">Phase 5: Pages & Routing</a>
+  <a href="#p1-phase6" class="nav-link">Phase 6: Features</a>
+  <a href="#p1-phase7" class="nav-link">Phase 7: Production</a>
+
+  <div class="nav-group">Day 2 — Component Library</div>
+  <a href="#p2-phase0" class="nav-link">Phase 0: Setup</a>
+  <a href="#p2-phase1" class="nav-link">Phase 1: Storybook</a>
+  <a href="#p2-phase2" class="nav-link">Phase 2: Components</a>
+  <a href="#p2-phase3" class="nav-link">Phase 3: Gulp Pipeline</a>
+  <a href="#p2-phase4" class="nav-link">Phase 4: Rollup + npm</a>
+
+  <div class="nav-group">Day 2 — AI Integration</div>
+  <a href="#ai-phase" class="nav-link">Copilot + Cursor Rules</a>
+
+  <div class="nav-group">Your Notebook</div>
+  <a href="#my-notes" class="nav-link">📝 My Notes</a>
+  <a href="#concepts" class="nav-link">💡 Concepts Library</a>
+  <a href="#errors" class="nav-link">🐛 Error Log</a>
+</nav>
+
+<main>
+
+<!-- ===================== HOME ===================== -->
+<section id="home" class="active">
+  <h2>2-Day Learning Roadmap</h2>
+  <p>Goal: Build two portfolio projects AND understand every piece well enough to explain in an interview.</p>
+
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <p style="font-size:0.85rem;color:var(--muted)" id="progressText">0% complete — check off tasks as you go</p>
+
+  <div class="resume-box">
+    "Built a responsive invoice management dashboard using React, TypeScript, GraphQL, Material UI, and custom Webpack configuration, improving bundle optimization through code splitting and lazy loading."
+  </div>
+  <div class="resume-box">
+    "Developed a reusable React component library with Storybook documentation and Gulp-based build automation, improving UI consistency and developer productivity."
+  </div>
+
+  <h3>Day 1 Schedule</h3>
+  <div class="timeline">
+    <div class="timeline-item"><strong>Phase 0–1</strong> (2h) — Project scaffold + Webpack config<br><span style="color:var(--muted)">Understand: entry, output, loaders, plugins</span></div>
+    <div class="timeline-item"><strong>Phase 2–3</strong> (3h) — React architecture + GraphQL/Apollo<br><span style="color:var(--muted)">Understand: component tree, queries, cache</span></div>
+    <div class="timeline-item"><strong>Phase 4–5</strong> (3h) — MUI theme + all pages<br><span style="color:var(--muted)">Understand: ThemeProvider, lazy routes</span></div>
+    <div class="timeline-item"><strong>Phase 6–7</strong> (2h) — Skeletons, a11y, error boundaries, prod build<br><span style="color:var(--muted)">Understand: code splitting output in dist/</span></div>
+  </div>
+
+  <h3>Day 2 Schedule</h3>
+  <div class="timeline">
+    <div class="timeline-item"><strong>Phase 0–1</strong> (2h) — Component library scaffold + Storybook</div>
+    <div class="timeline-item"><strong>Phase 2</strong> (4h) — Build all 9 components with stories</div>
+    <div class="timeline-item"><strong>Phase 3–4</strong> (2h) — Gulp tasks + Rollup packaging</div>
+    <div class="timeline-item"><strong>AI Phase</strong> (1h) — copilot-instructions + .cursor/rules</div>
+  </div>
+</section>
+
+<!-- ===================== HOW TO USE ===================== -->
+<section id="how-to-use">
+  <h2>How to Use This Guide</h2>
+
+  <div class="card why">
+    <div class="card-title">Your role</div>
+    <p>You write every line of code. I explain <em>what</em>, <em>why</em>, and <em>how</em>. When stuck, paste the error here or in chat — we log it in the Error Log.</p>
+  </div>
+
+  <div class="card do">
+    <div class="card-title">📓 Live notebook rule</div>
+    <p><strong>Every phase is documented in this HTML</strong> as you build. When you say <code>next</code>, <code>note</code>, or <code>error:</code> in chat, the matching phase section here is updated with:</p>
+    <ul>
+      <li>Exact steps in order</li>
+      <li>Full code to copy</li>
+      <li>What / why / line-by-line explanations</li>
+      <li>Errors faced + fixes</li>
+      <li>Verification commands (<code>npm start</code>, <code>npm run build</code>)</li>
+      <li>Interview questions with answers (dropdowns)</li>
+    </ul>
+    <p>Use this file as your single source of truth — not just chat history.</p>
+  </div>
+
+  <div class="card do">
+    <div class="card-title">Commands in chat</div>
+    <ul>
+      <li><code>next</code> — move to the next step in current phase</li>
+      <li><code>note</code> — I save a concept to your Concepts Library (also add it here manually)</li>
+      <li><code>error: ...</code> — I log the error + fix in Error Log</li>
+      <li><code>explain [topic]</code> — deep dive on any topic</li>
+      <li><code>interview [phase]</code> — mock interview questions for that phase</li>
+    </ul>
+  </div>
+
+  <div class="card warn">
+    <div class="card-title">Folder structure (create as you go)</div>
+<pre>InvoiceCloud/
+├── learning-guide.html          ← this file
+├── invoice-dashboard/           ← Project 1
+│   ├── .npmrc                   ← public npm registry (corporate laptop)
+│   ├── .gitignore
+│   ├── webpack.config.js
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── public/index.html
+│   └── src/
+│       ├── index.tsx
+│       ├── App.tsx
+│       ├── graphql/
+│       ├── pages/
+│       ├── components/
+│       ├── theme/
+│       └── hooks/
+├── component-library/           ← Project 2
+│   ├── gulpfile.js
+│   ├── rollup.config.js
+│   ├── src/components/
+│   └── stories/
+├── .github/copilot-instructions.md
+└── .cursor/rules/</pre>
+  </div>
+</section>
+
+<!-- ===================== P1 PHASE 0 ===================== -->
+<section id="p1-phase0">
+  <h2><span class="badge badge-day1">Day 1</span> Project 1 — Phase 0: Setup <span class="phase-status done">✓ Complete</span></h2>
+  <span class="badge badge-time">~45 min</span>
+
+  <div class="card why">
+    <div class="card-title">Why this phase?</div>
+    <p>Every React app needs a bundler, TypeScript compiler, and dependency manager. You're NOT using Create React App — you're configuring Webpack yourself. That's the skill interviewers test.</p>
+  </div>
+
+  <div class="card do">
+    <div class="card-title">Phase 0 — complete workflow (in order)</div>
+    <ol>
+      <li>Create folder <code>invoice-dashboard</code> → <code>npm init -y</code></li>
+      <li>Create <code>.npmrc</code> (corporate laptop — see Step 0 below)</li>
+      <li>Install runtime packages (Step 1)</li>
+      <li>Install dev packages (Step 2)</li>
+      <li>Update <code>package.json</code> scripts (Step A)</li>
+      <li>Fill all config + source files (Steps B–G)</li>
+      <li>Run <code>npm start</code> (Step H)</li>
+    </ol>
+  </div>
+
+  <h3>📁 All Phase 0 files — code + full explanation</h3>
+  <p>Each step below has: <strong>what the file is</strong>, <strong>why you need it</strong>, <strong>the code to paste</strong>, and <strong>line-by-line notes</strong>. Expand every dropdown and read before copying.</p>
+
+  <div class="card why" style="margin-bottom:1.25rem">
+    <div class="card-title">The big picture — how ALL files connect</div>
+<pre>
+YOU CREATE                         AUTO-GENERATED              BUILD OUTPUT
+──────────                         ──────────────              ────────────
+.npmrc          ──┐
+package.json    ──┤
+package-lock.json─┤  npm install  →  node_modules/  ──┐
+                  ──┘                                  │
+tsconfig.json   ───────────────────────────────────────┤
+webpack.config.js                                      │
+public/index.html ──┐                                  │
+src/index.tsx     ──┼──►  webpack (npm start)  ──►  dist/js/main.js  →  browser
+src/App.tsx       ──┘
+.gitignore        (tells Git to ignore node_modules + dist)
+</pre>
+  </div>
+
+  <!-- STEP 0 -->
+  <details class="file-explainer" open>
+    <summary>Step 0 — <code>.npmrc</code></summary>
+    <div class="file-body">
+      <span class="file-role">Project npm registry override</span>
+      <p><strong>What it is:</strong> A config file that tells npm <em>where</em> to download packages from.</p>
+      <p><strong>Why you need it:</strong> Corporate laptops have global <code>~/.npmrc</code> pointing to AWS CodeArtifact. Personal projects need public npm. Project-level <code>.npmrc</code> overrides global for THIS folder only — work projects unchanged.</p>
+      <div class="analogy">🏠 Analogy: Global .npmrc is your company's approved supplier list. Project .npmrc says "for this recipe, shop at the public grocery store instead."</div>
+      <p><strong>Paste this into</strong> <code>invoice-dashboard/.npmrc</code>:</p>
+<pre>registry=https://registry.npmjs.org/</pre>
+      <p><strong>Symptom if missing:</strong> <code>ERESOLVE</code>, <code>graphql@undefined</code> even with correct versions.</p>
+    </div>
+  </details>
+
+  <!-- STEP 1 -->
+  <details class="file-explainer">
+    <summary>Step 1 — Install runtime packages → updates <code>package.json</code></summary>
+    <div class="file-body">
+      <span class="file-role">dependencies — needed at runtime in production</span>
+      <p><strong>What this step does:</strong> Downloads app libraries and adds them to <code>package.json</code> under <code>"dependencies"</code>.</p>
+<pre>npm install react react-dom react-router-dom graphql @apollo/client @mui/material @emotion/react @emotion/styled @mui/icons-material</pre>
+      <p><strong>Each package explained:</strong></p>
+      <ul>
+        <li><code>react</code> + <code>react-dom</code> — UI library; react-dom connects React to the browser DOM</li>
+        <li><code>react-router-dom</code> — Client-side routing (Login → Dashboard → Invoices) — Phase 5</li>
+        <li><code>graphql</code> — GraphQL language; required peer dependency for Apollo — Phase 3</li>
+        <li><code>@apollo/client</code> — GraphQL client (queries, cache, loading states) — Phase 3</li>
+        <li><code>@mui/material</code> — Material UI components (buttons, tables, theme) — Phase 4</li>
+        <li><code>@emotion/react</code> + <code>@emotion/styled</code> — CSS-in-JS engine MUI uses internally</li>
+        <li><code>@mui/icons-material</code> — Icon set (menu, dark mode toggle, etc.) — Phase 4</li>
+      </ul>
+      <div class="analogy">🏠 Analogy: Runtime dependencies are ingredients you serve to customers. devDependencies (Step 2) are kitchen tools — not served, only used while cooking.</div>
+      <p><strong>Success sign:</strong> Terminal shows <code>added 100+ packages</code>. Folder <code>node_modules/</code> appears.</p>
+      <p><strong>⚠️ Don't run plain</strong> <code>npm install</code> on empty package.json — it installs nothing (Error #1).</p>
+    </div>
+  </details>
+
+  <!-- STEP 2 -->
+  <details class="file-explainer">
+    <summary>Step 2 — Install dev packages → updates <code>package.json</code> devDependencies</summary>
+    <div class="file-body">
+      <span class="file-role">devDependencies — build tools only, not shipped to users</span>
+      <p><strong>What this step does:</strong> Installs tools used during development. Not included in production deploy.</p>
+<pre>npm install --save-dev typescript ts-loader webpack webpack-cli webpack-dev-server html-webpack-plugin css-loader style-loader mini-css-extract-plugin eslint prettier eslint-config-prettier @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-jsx-a11y @types/react @types/react-dom</pre>
+      <p><strong>Each package explained:</strong></p>
+      <ul>
+        <li><code>typescript</code> — Type-safe JavaScript; catches bugs before runtime</li>
+        <li><code>ts-loader</code> — Webpack loader that converts .tsx → .js</li>
+        <li><code>webpack</code> + <code>webpack-cli</code> — Bundler + command-line interface</li>
+        <li><code>webpack-dev-server</code> — Local server at localhost:3000 with hot reload</li>
+        <li><code>html-webpack-plugin</code> — Injects JS bundle into index.html automatically</li>
+        <li><code>css-loader</code> + <code>style-loader</code> — Handle CSS imports in JS</li>
+        <li><code>mini-css-extract-plugin</code> — Extracts CSS to separate files in production (Phase 7)</li>
+        <li><code>eslint</code> + plugins — Finds code bugs and a11y issues (Phase 7)</li>
+        <li><code>prettier</code> — Auto-formats code consistently (Phase 7)</li>
+        <li><code>@types/react</code> + <code>@types/react-dom</code> — TypeScript type definitions for React</li>
+      </ul>
+      <p><strong>Interview tip:</strong> Webpack goes in devDependencies because users get the built <code>dist/</code> folder — they never run Webpack themselves.</p>
+    </div>
+  </details>
+
+  <!-- AUTO: node_modules -->
+  <details class="file-explainer">
+    <summary>Auto — <code>node_modules/</code> (folder, created by npm install)</summary>
+    <div class="file-body">
+      <span class="file-role">Installed packages — never edit, never commit</span>
+      <p><strong>What it is:</strong> Folder created automatically when you run <code>npm install</code>. Can contain 100,000+ files.</p>
+      <p><strong>What it does:</strong> Stores every package from package.json plus all their sub-dependencies. When you <code>import React from 'react'</code>, Node resolves it to a file inside <code>node_modules/react/</code>.</p>
+      <div class="analogy">🏠 Analogy: Your pantry. package.json is the shopping list; node_modules is everything you bought. You cook from the pantry, not the list.</div>
+      <p><strong>Why you need it:</strong> Without it, imports fail — nothing can run.</p>
+      <p><strong>⚠️ Never commit to Git.</strong> Listed in <code>.gitignore</code>. Teammates recreate it with <code>npm install</code>.</p>
+    </div>
+  </details>
+
+  <!-- AUTO: package-lock.json -->
+  <details class="file-explainer">
+    <summary>Auto — <code>package-lock.json</code> (created by npm install)</summary>
+    <div class="file-body">
+      <span class="file-role">Exact version lockfile — commit this to Git</span>
+      <p><strong>What it is:</strong> Auto-generated file recording the EXACT version of every installed package.</p>
+      <p><strong>Why it exists:</strong> package.json says <code>"react": "^18.3.1"</code> (any 18.x). package-lock.json pins <code>18.3.1</code> exactly so everyone on the team gets identical installs.</p>
+      <div class="analogy">🏠 Analogy: package.json says "buy milk". package-lock.json says "buy Organic Valley 2% milk, 1 gallon, lot #4821" — exact reproducibility.</div>
+      <p><strong>Do commit this</strong> to Git (unlike node_modules). Ensures CI and teammates get same versions.</p>
+    </div>
+  </details>
+
+  <!-- STEP A -->
+  <details class="file-explainer" open>
+    <summary>Step A — <code>package.json</code> scripts section</summary>
+    <div class="file-body">
+      <span class="file-role">Project manifest — scripts are shortcuts for commands</span>
+      <p><strong>What it is:</strong> JSON file at project root. Created by <code>npm init -y</code>. Already has dependencies from Steps 1–2. Now add scripts.</p>
+      <p><strong>Why scripts:</strong> Short memorable commands instead of long webpack CLI strings. Team uses same commands via CI/CD.</p>
+      <p><strong>Replace the <code>"scripts"</code> block.</strong> Remove <code>"main": "index.js"</code> if present:</p>
+<pre>"scripts": {
+  "start": "webpack serve --mode development --open",
+  "build": "webpack --mode production",
+  "lint": "eslint src --ext .ts,.tsx",
+  "format": "prettier --write \"src/**/*.{ts,tsx}\""
+}</pre>
+      <p><strong>Each script explained:</strong></p>
+      <ul>
+        <li><code>npm start</code> → runs webpack dev server, development mode, opens browser</li>
+        <li><code>npm run build</code> → production bundle to dist/, minified + tree-shaken (Phase 7)</li>
+        <li><code>npm run lint</code> → ESLint checks for bugs and a11y issues (Phase 7)</li>
+        <li><code>npm run format</code> → Prettier auto-formats all source files (Phase 7)</li>
+      </ul>
+      <div class="analogy">🏠 Analogy: Scripts are preset buttons on a microwave — "Start" instead of typing the full wattage + time + settings every time.</div>
+    </div>
+  </details>
+
+  <!-- STEP B -->
+  <details class="file-explainer">
+    <summary>Step B — <code>tsconfig.json</code></summary>
+    <div class="file-body">
+      <span class="file-role">TypeScript compiler configuration</span>
+      <p><strong>What it is:</strong> Rules file for the TypeScript compiler. Webpack's ts-loader reads this when converting .tsx → .js.</p>
+      <p><strong>Why you need it:</strong> Browsers can't run TypeScript. ts-loader uses these rules to transform your code. Also gives you IDE autocomplete and error highlighting.</p>
+      <div class="analogy">🏠 Analogy: A spell-checker rulebook — catches typos, wrong types, and missing props BEFORE the app runs.</div>
+      <p><strong>Create file</strong> <code>invoice-dashboard/tsconfig.json</code>:</p>
+<pre>{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}</pre>
+      <p><strong>Line-by-line — key options:</strong></p>
+      <ul>
+        <li><code>target: ES2020</code> — Output modern JavaScript browsers understand</li>
+        <li><code>jsx: react-jsx</code> — Understand JSX; no <code>import React</code> needed in every file</li>
+        <li><code>strict: true</code> — Strictest type checking; catches null/undefined bugs</li>
+        <li><code>moduleResolution: bundler</code> — Works with Webpack's module system</li>
+        <li><code>include: [src]</code> — Only type-check files inside src/</li>
+        <li><code>exclude</code> — Skip node_modules and dist (not your code)</li>
+        <li><code>noUnusedLocals</code> — Error on unused variables (cleaner code)</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- STEP C -->
+  <details class="file-explainer">
+    <summary>Step C — <code>webpack.config.js</code></summary>
+    <div class="file-body">
+      <span class="file-role">Bundler config — THE most important file for interviews</span>
+      <p><strong>What it is:</strong> Instructions for Webpack — how to transform and bundle your source into browser-ready files.</p>
+      <p><strong>Why browsers need this:</strong> Browsers only understand HTML, CSS, JS. They CANNOT run TypeScript, JSX, or hundreds of npm imports directly.</p>
+      <div class="analogy">🏠 Analogy: Factory assembly line. Raw TSX files in → loaders transform → finished dist/main.js out.</div>
+      <p><strong>Create file</strong> <code>invoice-dashboard/webpack.config.js</code>:</p>
+<pre>const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+  entry: './src/index.tsx',
+
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'js/[name].js',
+    clean: true,
+    publicPath: '/',
+  },
+
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+  },
+
+  module: {
+    rules: [
+      { test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/ },
+      { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+    ],
+  },
+
+  plugins: [
+    new HtmlWebpackPlugin({ template: './public/index.html' }),
+  ],
+
+  devServer: {
+    port: 3000,
+    hot: true,
+    open: true,
+    historyApiFallback: true,
+  },
+
+  devtool: 'eval-source-map',
+};</pre>
+      <p><strong>Section-by-section explained:</strong></p>
+      <ul>
+        <li><code>entry</code> — Where bundling starts. Webpack follows all imports from here.</li>
+        <li><code>output.path</code> — Bundled files go to <code>dist/</code> folder</li>
+        <li><code>output.filename</code> — Name pattern for output JS files</li>
+        <li><code>output.clean</code> — Delete old dist/ contents before each build</li>
+        <li><code>resolve.extensions</code> — Import without writing .tsx extension</li>
+        <li><code>rules[0] ts-loader</code> — Converts .ts/.tsx files to JavaScript</li>
+        <li><code>rules[1] css-loader</code> — Handles CSS file imports</li>
+        <li><code>HtmlWebpackPlugin</code> — Auto-injects &lt;script src="main.js"&gt; into index.html</li>
+        <li><code>devServer.port</code> — Runs at localhost:3000</li>
+        <li><code>devServer.hot</code> — Hot Module Replacement (changes without full reload)</li>
+        <li><code>historyApiFallback</code> — SPA routing fix; /dashboard won't 404 on refresh (Phase 5)</li>
+        <li><code>devtool</code> — Source maps for debugging in browser DevTools</li>
+      </ul>
+      <p><strong>Phase 1:</strong> We'll add code splitting (splitChunks) and vendor bundles here.</p>
+    </div>
+  </details>
+
+  <!-- STEP D -->
+  <details class="file-explainer">
+    <summary>Step D — <code>public/index.html</code></summary>
+    <div class="file-body">
+      <span class="file-role">HTML shell — the ONLY HTML page in a Single Page App</span>
+      <p><strong>What it is:</strong> Minimal HTML template. In a React SPA, the browser loads this ONE file and never navigates to new HTML pages.</p>
+      <p><strong>Why you need it:</strong> Browsers need HTML to start. React needs a DOM element to mount into. This provides both.</p>
+      <div class="analogy">🏠 Analogy: Empty picture frame. React paints the entire app inside #root. Login → Dashboard changes the painting, not the frame.</div>
+      <p><strong>Create file</strong> <code>invoice-dashboard/public/index.html</code>:</p>
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;title&gt;Invoice Dashboard&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id="root"&gt;&lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+      <p><strong>Line-by-line:</strong></p>
+      <ul>
+        <li><code>charset UTF-8</code> — Supports all characters including emoji, special symbols</li>
+        <li><code>viewport</code> — Makes app responsive on mobile devices</li>
+        <li><code>&lt;div id="root"&gt;</code> — Empty container; React renders entire app here</li>
+        <li><strong>No &lt;script&gt; tag</strong> — HtmlWebpackPlugin adds it automatically from webpack.config.js</li>
+      </ul>
+      <p><strong>Why public/ folder:</strong> Convention for static assets (favicon, robots.txt) that don't need Webpack processing.</p>
+    </div>
+  </details>
+
+  <!-- STEP E -->
+  <details class="file-explainer">
+    <summary>Step E — <code>src/App.tsx</code></summary>
+    <div class="file-body">
+      <span class="file-role">Root React component — your application logic starts here</span>
+      <p><strong>What it is:</strong> The top-level React component. Everything in your app lives inside or below this component in the tree.</p>
+      <p><strong>Why separate from index.tsx:</strong> index.tsx = wiring/bootstrap only. App.tsx = actual application. Clean separation of concerns.</p>
+      <div class="analogy">🏠 Analogy: Building lobby. All rooms (pages) are accessed from here. Users always enter through the lobby.</div>
+      <p><strong>Create file</strong> <code>invoice-dashboard/src/App.tsx</code>:</p>
+<pre>function App() {
+  return (
+    &lt;main&gt;
+      &lt;h1&gt;Hello Invoice Dashboard&lt;/h1&gt;
+      &lt;p&gt;Phase 0 complete — Webpack + React + TypeScript working!&lt;/p&gt;
+    &lt;/main&gt;
+  );
+}
+
+export default App;</pre>
+      <p><strong>Line-by-line:</strong></p>
+      <ul>
+        <li><code>function App()</code> — React functional component (modern standard)</li>
+        <li><code>return (...)</code> — JSX: HTML-like syntax inside JavaScript</li>
+        <li><code>&lt;main&gt;</code> — Semantic HTML5 tag (accessibility — screen readers know this is main content)</li>
+        <li><code>export default App</code> — Makes component importable in index.tsx</li>
+      </ul>
+      <p><strong>What App.tsx will contain later:</strong></p>
+      <ul>
+        <li><code>&lt;ApolloProvider&gt;</code> — GraphQL client (Phase 3)</li>
+        <li><code>&lt;ThemeProvider&gt;</code> — MUI dark/light theme (Phase 4)</li>
+        <li><code>&lt;Routes&gt;</code> — Login, Dashboard, Invoices, Payments (Phase 5)</li>
+        <li><code>&lt;ErrorBoundary&gt;</code> + <code>&lt;Suspense&gt;</code> — Error handling + lazy loading (Phase 6)</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- STEP F -->
+  <details class="file-explainer">
+    <summary>Step F — <code>src/index.tsx</code></summary>
+    <div class="file-body">
+      <span class="file-role">Application entry point — Webpack starts here, React mounts here</span>
+      <p><strong>What it is:</strong> First file Webpack reads (<code>entry: './src/index.tsx'</code>). Connects React to the browser DOM.</p>
+      <p><strong>Why .tsx not .ts:</strong> Contains JSX (<code>&lt;App /&gt;</code>). The x = TypeScript + JSX.</p>
+      <div class="analogy">🏠 Analogy: Ignition key. Doesn't drive the car (App does) — starts the engine and connects React to DOM.</div>
+      <p><strong>Create file</strong> <code>invoice-dashboard/src/index.tsx</code>:</p>
+<pre>import { createRoot } from 'react-dom/client';
+import App from './App';
+
+const container = document.getElementById('root');
+if (!container) throw new Error('Root element not found');
+
+createRoot(container).render(&lt;App /&gt;);</pre>
+      <p><strong>Line-by-line:</strong></p>
+      <ul>
+        <li><code>import { createRoot }</code> — React 18 API for mounting (replaces deprecated ReactDOM.render)</li>
+        <li><code>import App from './App'</code> — Import your root component</li>
+        <li><code>document.getElementById('root')</code> — Find the div from index.html</li>
+        <li><code>if (!container) throw...</code> — Safety check; clear error if #root missing</li>
+        <li><code>createRoot(container).render(&lt;App /&gt;)</code> — Mount React app into DOM</li>
+      </ul>
+      <p><strong>Later you'll add here:</strong> ApolloProvider, ThemeProvider wrappers around &lt;App /&gt;.</p>
+    </div>
+  </details>
+
+  <!-- STEP G -->
+  <details class="file-explainer">
+    <summary>Step G — <code>.gitignore</code></summary>
+    <div class="file-body">
+      <span class="file-role">Git ignore rules — what NOT to commit</span>
+      <p><strong>What it is:</strong> Text file telling Git which files/folders to never track or commit.</p>
+      <p><strong>Why you need it:</strong> Prevents accidentally committing huge folders, secrets, or generated files.</p>
+      <p><strong>Create file</strong> <code>invoice-dashboard/.gitignore</code>:</p>
+<pre>node_modules/
+dist/
+.env
+.DS_Store</pre>
+      <p><strong>Each line explained:</strong></p>
+      <ul>
+        <li><code>node_modules/</code> — 100,000+ files; recreatable with npm install; never commit</li>
+        <li><code>dist/</code> — Build output; regenerated with npm run build</li>
+        <li><code>.env</code> — Environment variables; may contain API keys and secrets</li>
+        <li><code>.DS_Store</code> — macOS system file; irrelevant to project</li>
+      </ul>
+      <p><strong>Do commit:</strong> package.json, package-lock.json, all source files, config files.</p>
+    </div>
+  </details>
+
+  <!-- STEP H -->
+  <details class="file-explainer">
+    <summary>Step H — Run the app + <code>dist/</code> output folder</summary>
+    <div class="file-body">
+      <span class="file-role">Start dev server — verify everything works</span>
+      <p><strong>Run in terminal:</strong></p>
+<pre>cd invoice-dashboard
+npm start</pre>
+      <p><strong>Expected in browser</strong> at <code>http://localhost:3000</code>:</p>
+<pre>Hello Invoice Dashboard
+Phase 0 complete — Webpack + React + TypeScript working!</pre>
+      <p><strong>What happens step-by-step when you run npm start:</strong></p>
+      <ol>
+        <li>npm reads <code>"start"</code> script from package.json</li>
+        <li>Runs <code>webpack serve --mode development --open</code></li>
+        <li>Webpack reads webpack.config.js</li>
+        <li>Starts at entry: src/index.tsx, follows all imports</li>
+        <li>ts-loader converts TypeScript/JSX → JavaScript</li>
+        <li>HtmlWebpackPlugin injects &lt;script&gt; tag into index.html</li>
+        <li>webpack-dev-server serves files from memory at port 3000</li>
+        <li>Browser opens automatically, loads HTML → runs JS</li>
+        <li>index.tsx finds #root → renders &lt;App /&gt; → you see Hello message</li>
+      </ol>
+      <p><strong>About <code>dist/</code> folder:</strong> Created when you run <code>npm run build</code> (not npm start). Contains minified production bundles. Never edit manually. Phase 7 covers this.</p>
+    </div>
+  </details>
+
+  <h3>Key concepts to understand</h3>
+  <ul>
+    <li><strong>npm</strong> — package manager; <code>package.json</code> lists dependencies</li>
+    <li><strong>node_modules</strong> — where installed packages live (never commit this)</li>
+    <li><strong>devDependencies</strong> — tools used only during development (webpack, eslint)</li>
+    <li><strong>dependencies</strong> — libraries your app needs at runtime (react, mui)</li>
+    <li><strong>package-lock.json</strong> — exact version lock; commit to Git for reproducible installs</li>
+  </ul>
+
+  <div class="phase-checklist" data-phase="p1-phase0">
+    <label><input type="checkbox" data-id="p1-0-1"><span>Created invoice-dashboard folder + npm init -y</span></label>
+    <label><input type="checkbox" data-id="p1-0-1b"><span>Created .npmrc (corporate laptop)</span></label>
+    <label><input type="checkbox" data-id="p1-0-2"><span>Installed runtime + dev packages</span></label>
+    <label><input type="checkbox" data-id="p1-0-2b"><span>Updated package.json scripts (Step A)</span></label>
+    <label><input type="checkbox" data-id="p1-0-3"><span>tsconfig.json filled (Step B)</span></label>
+    <label><input type="checkbox" data-id="p1-0-4"><span>webpack.config.js filled (Step C)</span></label>
+    <label><input type="checkbox" data-id="p1-0-4b"><span>public/index.html filled (Step D)</span></label>
+    <label><input type="checkbox" data-id="p1-0-4c"><span>src/App.tsx filled (Step E)</span></label>
+    <label><input type="checkbox" data-id="p1-0-4d"><span>src/index.tsx filled (Step F)</span></label>
+    <label><input type="checkbox" data-id="p1-0-4e"><span>.gitignore created (Step G)</span></label>
+    <label><input type="checkbox" data-id="p1-0-5"><span>npm start works — Hello world in browser (Step H)</span></label>
+  </div>
+
+  <h3>⚠️ Common errors you may hit in Phase 0 (already logged)</h3>
+  <details class="iq-dropdown">
+    <summary>Error #1 — <code>npm install</code> audited only 1 package</summary>
+    <p class="iq-answer"><strong>What it is:</strong> Plain <code>npm install</code> on empty package.json installs nothing.<br><strong>Fix:</strong> <code>npm install react react-dom webpack ...</code> — install packages by name.<br><strong>Also in:</strong> Error Log + Concepts Library → "npm install vs npm install package"</p>
+  </details>
+  <details class="iq-dropdown">
+    <summary>Error #2 — <code>ERESOLVE graphql@undefined</code></summary>
+    <p class="iq-answer"><strong>What it is:</strong> Corporate npm registry (AWS CodeArtifact) can't resolve graphql.<br><strong>Fix:</strong> Create <code>invoice-dashboard/.npmrc</code> with <code>registry=https://registry.npmjs.org/</code><br><strong>Also in:</strong> Error Log + Concepts Library → "Project .npmrc vs Global .npmrc"</p>
+  </details>
+  <details class="iq-dropdown">
+    <summary>Error #3 — <code>TS17004 Cannot use JSX</code> / Module parse failed</summary>
+    <p class="iq-answer"><strong>What it is:</strong> Empty or missing <code>tsconfig.json</code> — no <code>"jsx": "react-jsx"</code> flag.<br><strong>Fix:</strong> Paste full tsconfig.json from Step B. Stop server (Ctrl+C), run <code>npm start</code> again.<br><strong>Also in:</strong> Error Log</p>
+  </details>
+
+  <div class="card interview">
+    <div class="card-title">🎤 Interview Questions — Phase 0 (click to reveal answers)</div>
+    <div class="interview-qa">
+      <p class="hint">Try answering aloud first, then click to check. Label changes from Q → A when open.</p>
+
+      <details class="iq-dropdown">
+        <summary>What is the difference between dependencies and devDependencies?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <code>dependencies</code> are packages your app needs at <em>runtime</em> in production — React, MUI, Apollo. <code>devDependencies</code> are tools used only during development — Webpack, TypeScript, ESLint. When someone runs <code>npm install --production</code>, only dependencies are installed. This keeps production deployments lean.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>Why do we use TypeScript instead of plain JavaScript in enterprise apps?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> TypeScript adds static typing — catches bugs at compile time (wrong prop types, null references) before they reach production. It improves IDE autocomplete, makes refactoring safer across large codebases, and serves as living documentation through interfaces. Enterprise teams with 50+ developers rely on this to prevent integration errors.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What does npm init -y do?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Creates a <code>package.json</code> file with default values (-y skips interactive prompts). It initializes your project as an npm package — giving it a name, version, and empty scripts/dependencies sections. It's always the first step before installing any packages.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is a bundler and why do we need one?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> A bundler (Webpack, Vite, Rollup) takes many source files and npm packages and combines them into files browsers can run. Browsers can't natively run TypeScript, JSX, or hundreds of separate <code>import</code> statements efficiently. The bundler transforms, resolves dependencies, optimizes, and outputs a few JS/CSS files.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What's the difference between Webpack and Vite?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Webpack bundles everything before serving — slower cold start but highly configurable; industry standard for complex apps. Vite uses native ES modules in dev for instant startup, then Rollup for production — faster dev experience, simpler config. Webpack is better when you need fine-grained control (custom loaders, complex splitChunks). Vite is better for greenfield projects prioritizing dev speed.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>Explain the role of index.tsx vs App.tsx.</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <code>index.tsx</code> is the bootstrap file — finds the DOM root element and mounts React. It wires providers (Apollo, Theme, Router) but contains no UI logic. <code>App.tsx</code> is the root React component — defines routes, layout, and app structure. Separation keeps entry/wiring concerns separate from application logic.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>Why do we put HTML in public/ and React code in src/?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <code>public/</code> holds static assets that don't need processing — HTML template, favicon, robots.txt. <code>src/</code> holds source code that goes through the build pipeline (TypeScript compilation, bundling). This separation is a universal convention — build tools know to process src/ and copy/serve public/ as-is.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What happens when you run npm start step by step?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> 1) npm reads the <code>start</code> script from package.json → runs webpack serve. 2) Webpack reads webpack.config.js, starts at entry (index.tsx). 3) Follows all imports, ts-loader converts TSX→JS. 4) HtmlWebpackPlugin injects script tag into index.html. 5) webpack-dev-server serves files at localhost:3000 with hot reload. 6) Browser loads HTML → executes JS → React renders into #root.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== P1 PHASE 1 ===================== -->
+<section id="p1-phase1">
+  <h2><span class="badge badge-day1">Day 1</span> Phase 1: Webpack Configuration <span class="phase-status done">✓ Complete</span></h2>
+  <span class="badge badge-time">~1 hour</span>
+
+  <div class="card why">
+    <div class="card-title">Why this phase?</div>
+    <p>Phase 0 gave you a working dev setup. Phase 1 upgrades <code>webpack.config.js</code> for <strong>production optimization</strong> — code splitting, vendor chunks, cache busting. This is what your resume bullet and interviews refer to.</p>
+  </div>
+
+  <div class="card do">
+    <div class="card-title">Phase 1 — workflow (in order)</div>
+    <ol>
+      <li>Replace <code>webpack.config.js</code> with production-ready version (Step 1)</li>
+      <li>Understand each new section (Step 2 — read dropdowns)</li>
+      <li>Verify dev: <code>npm start</code> (Step 3)</li>
+      <li>Verify prod: <code>npm run build</code> + inspect <code>dist/js/</code> (Step 4)</li>
+    </ol>
+  </div>
+
+  <h3>📁 Phase 1 — upgrade webpack.config.js (code + full explanation)</h3>
+
+  <details class="file-explainer" open>
+    <summary>Step 1 — Replace entire <code>webpack.config.js</code></summary>
+    <div class="file-body">
+      <span class="file-role">Production-ready bundler config</span>
+      <p><strong>What changes from Phase 0:</strong> Adds splitChunks, contenthash, MiniCssExtractPlugin, runtimeChunk, tree shaking flags.</p>
+      <p><strong>Paste this entire file</strong> (replaces Phase 0 version):</p>
+<pre>const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const isProduction =
+  process.env.NODE_ENV === 'production' || process.argv.includes('--mode=production');
+
+module.exports = {
+  entry: './src/index.tsx',
+
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: isProduction ? 'js/[name].[contenthash:8].js' : 'js/[name].js',
+    chunkFilename: isProduction ? 'js/[name].[contenthash:8].chunk.js' : 'js/[name].chunk.js',
+    clean: true,
+    publicPath: '/',
+  },
+
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+  },
+
+  module: {
+    rules: [
+      { test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/ },
+      {
+        test: /\.css$/,
+        use: [
+          isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+          'css-loader',
+        ],
+      },
+    ],
+  },
+
+  plugins: [
+    new HtmlWebpackPlugin({ template: './public/index.html' }),
+    ...(isProduction
+      ? [new MiniCssExtractPlugin({ filename: 'css/[name].[contenthash:8].css' })]
+      : []),
+  ],
+
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+        },
+        mui: {
+          test: /[\\/]node_modules[\\/]@mui[\\/]/,
+          name: 'mui',
+          chunks: 'all',
+        },
+      },
+    },
+    runtimeChunk: 'single',
+    usedExports: true,
+  },
+
+  devServer: {
+    port: 3000,
+    hot: true,
+    open: true,
+    historyApiFallback: true,
+  },
+
+  devtool: isProduction ? 'source-map' : 'eval-source-map',
+
+  performance: {
+    hints: isProduction ? 'warning' : false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000,
+  },
+};</pre>
+    </div>
+  </details>
+
+  <details class="file-explainer">
+    <summary>Step 2 — Understand each NEW section</summary>
+    <div class="file-body">
+      <p><strong><code>isProduction</code> flag</strong></p>
+      <p>Detects dev vs prod. <code>npm start</code> → development. <code>npm run build</code> → production. Different optimizations per mode.</p>
+
+      <p><strong><code>output.filename</code> + <code>contenthash</code></strong></p>
+      <p>Production: <code>main.a3f2b1c8.js</code>. Hash changes when file content changes → browser fetches new file (cache busting). Interview: "Ensures users get latest code after deploy."</p>
+
+      <p><strong><code>chunkFilename</code></strong></p>
+      <p>Same hash pattern for split chunks (vendors, mui, lazy-loaded routes later).</p>
+
+      <p><strong>CSS: style-loader vs MiniCssExtractPlugin</strong></p>
+      <ul>
+        <li>Dev → <code>style-loader</code> injects CSS via JS (enables hot reload)</li>
+        <li>Prod → <code>MiniCssExtractPlugin</code> writes separate .css files (better caching)</li>
+      </ul>
+
+      <p><strong><code>optimization.splitChunks</code> — interview gold</strong></p>
+      <ul>
+        <li><code>vendor</code> group → all node_modules → <code>vendors.js</code></li>
+        <li><code>mui</code> group → @mui packages → <code>mui.js</code> (large, cache separately)</li>
+        <li><code>main.js</code> → only YOUR code (small, changes often)</li>
+      </ul>
+      <div class="analogy">🏠 Analogy: Instead of one heavy suitcase, pack clothes (main), tools (vendors), and shoes (mui) in separate bags — only repack what changed.</div>
+
+      <p><strong><code>runtimeChunk: 'single'</code></strong></p>
+      <p>Webpack runtime in its own file. When app code changes, runtime file stays cached.</p>
+
+      <p><strong><code>usedExports: true</code></strong></p>
+      <p>Marks unused exports for tree shaking (works with <code>mode: production</code>).</p>
+
+      <p><strong><code>performance.hints</code></strong></p>
+      <p>Warns if bundles exceed 512KB in production — helps catch bundle bloat.</p>
+    </div>
+  </details>
+
+  <details class="file-explainer">
+    <summary>Step 3 — Verify development (<code>npm start</code>)</summary>
+    <div class="file-body">
+<pre>npm start</pre>
+      <p><strong>Expected:</strong> Browser at localhost:3000, same Hello message, no errors.</p>
+      <p>Dev mode uses simple filenames (no hash) and style-loader for faster iteration.</p>
+    </div>
+  </details>
+
+  <details class="file-explainer">
+    <summary>Step 4 — Verify production (<code>npm run build</code>)</summary>
+    <div class="file-body">
+<pre>npm run build
+ls -la dist/js/</pre>
+      <p><strong>Expected — multiple files in dist/js/:</strong></p>
+<pre>main.xxxxxxxx.js       ← your App code (~5 KB)
+vendors.xxxxxxxx.js    ← react, react-dom, apollo, graphql...
+mui.xxxxxxxx.js        ← @mui/material + icons (~500 KB)
+runtime.xxxxxxxx.js    ← webpack runtime (~small)</pre>
+      <p><strong>Interview line:</strong> "I configured splitChunks to separate MUI and vendor code for independent browser caching."</p>
+      <p><strong>Terminal also shows</strong> asset sizes after build — note them for portfolio.</p>
+    </div>
+  </details>
+
+  <h3>Webpack mental model</h3>
+<pre>
+Your code (TS/TSX/CSS)
+        ↓
+   [ ENTRY ]        ← src/index.tsx
+        ↓
+   [ LOADERS ]      ← ts-loader, css-loader
+        ↓
+   [ PLUGINS ]      ← HtmlWebpackPlugin, MiniCssExtractPlugin (prod)
+        ↓
+   [ OPTIMIZATION ] ← splitChunks, tree shaking (prod)
+        ↓
+   [ OUTPUT ]       ← dist/js/main.js + vendors.js + mui.js + runtime.js
+</pre>
+
+  <div class="phase-checklist" data-phase="p1-phase1">
+    <label><input type="checkbox" data-id="p1-1-1"><span>Replaced webpack.config.js with Phase 1 version</span></label>
+    <label><input type="checkbox" data-id="p1-1-2"><span>Understand isProduction + contenthash</span></label>
+    <label><input type="checkbox" data-id="p1-1-3"><span>Understand splitChunks (vendor + mui)</span></label>
+    <label><input type="checkbox" data-id="p1-1-4"><span>npm start still works (dev)</span></label>
+    <label><input type="checkbox" data-id="p1-1-5"><span>npm run build creates multiple files in dist/js/</span></label>
+    <label><input type="checkbox" data-id="p1-1-6"><span>Can explain tree shaking + cache busting in interview</span></label>
+  </div>
+
+  <h3>⚠️ Phase 1 errors (log if you hit any)</h3>
+  <details class="iq-dropdown">
+    <summary>Error — <code>MiniCssExtractPlugin is not defined</code></summary>
+    <p class="iq-answer"><strong>Cause:</strong> Missing import at top of webpack.config.js.<br><strong>Fix:</strong> Add <code>const MiniCssExtractPlugin = require('mini-css-extract-plugin');</code></p>
+  </details>
+
+  <div class="card why" style="margin-top:1rem;border-left:3px solid var(--accent2)">
+    <div class="card-title">✓ Phase 1 verified</div>
+    <p>Build output confirmed:</p>
+<pre>dist/js/main.js      ~2.4 KB   ← your App code
+dist/js/vendors.js   ~386 KB   ← react, react-dom, etc.
+dist/js/runtime.js   ~1 KB     ← webpack runtime</pre>
+    <p><strong>Note:</strong> No <code>mui.js</code> yet — MUI isn't imported in App.tsx. You'll see a separate mui chunk after Phase 4.</p>
+  </div>
+
+  <div class="card interview">
+    <div class="card-title">🎤 Interview Questions — Phase 1: Webpack (click to reveal answers)</div>
+    <div class="interview-qa">
+      <p class="hint">Try answering aloud first, then click to check.</p>
+
+      <details class="iq-dropdown">
+        <summary>Explain the Webpack build pipeline from entry to output.</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Webpack starts at the <code>entry</code> file and builds a dependency graph by following every import. Each file passes through <code>loaders</code> (ts-loader for TSX, css-loader for CSS) that transform it. <code>plugins</code> perform extra tasks like injecting JS into HTML. Finally, everything is bundled into <code>output</code> files in dist/. In production mode, it also minifies and tree-shakes.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is a loader vs a plugin in Webpack?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <strong>Loaders</strong> transform individual files as they're imported — ts-loader converts .tsx to .js, css-loader handles CSS. They operate file-by-file during the module graph build. <strong>Plugins</strong> operate on the entire bundle — HtmlWebpackPlugin generates the final HTML, MiniCssExtractPlugin extracts CSS into separate files. Rule of thumb: loaders = file transformers, plugins = bundle-level tasks.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is code splitting and how does Webpack achieve it?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Code splitting breaks your bundle into smaller chunks loaded on demand, reducing initial page load time. Webpack achieves this via: 1) Dynamic <code>import()</code> syntax — creates async chunks. 2) <code>optimization.splitChunks</code> — automatically separates vendor code (node_modules) into its own chunk. 3) <code>React.lazy()</code> — loads route components only when visited. Result: main.js is smaller; page-specific code loads when needed.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is tree shaking? When does it work?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Tree shaking eliminates unused exports from the final bundle. It works when: 1) Using ES modules (<code>import/export</code>), NOT CommonJS (<code>require</code>). 2) Webpack <code>mode: 'production'</code> is set. 3) Side-effect-free modules (<code>"sideEffects": false</code> in package.json). Example: if you import only <code>Button</code> from MUI but not <code>Table</code>, Table code is removed from the bundle.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What does [contenthash] in output filename do and why?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <code>[contenthash]</code> generates a unique hash based on file content — e.g. <code>main.a3f2b1c8.js</code>. When code changes, the hash changes, forcing browsers to download the new file instead of using a cached old version. When code hasn't changed, the hash stays the same, so browsers use the cached copy. This is called cache busting — critical for production deployments.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is the difference between style-loader and MiniCssExtractPlugin?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <code>style-loader</code> injects CSS into the DOM via &lt;style&gt; tags at runtime — used in development for hot reload. <code>MiniCssExtractPlugin</code> extracts CSS into separate .css files — used in production for better caching (browser caches CSS independently from JS) and avoids flash-of-unstyled-content. Dev = style-loader; Production = MiniCssExtractPlugin.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How does webpack-dev-server differ from a production build?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Dev server serves files from memory (not disk), enables Hot Module Replacement (HMR — changes appear without full page reload), skips minification for faster builds, and uses eval-source-map for debugging. Production build writes optimized files to dist/, minifies code, tree-shakes, splits chunks, and generates source maps. Dev prioritizes speed; production prioritizes performance and size.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is historyApiFallback and why do SPAs need it?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> In a SPA, React Router handles routing client-side — URLs like /dashboard don't correspond to actual files on the server. Without historyApiFallback, refreshing /dashboard would return a 404 from the dev server. This option tells the dev server: "for any unknown URL, serve index.html instead" — letting React Router take over. Required for all client-side routed apps.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== P1 PHASE 2 ===================== -->
+<section id="p1-phase2">
+  <h2><span class="badge badge-day1">Day 1</span> Phase 2: React + TypeScript Architecture <span class="phase-status done">✓ Complete</span></h2>
+  <span class="badge badge-time">~1.5 hours</span>
+
+  <div class="card do">
+    <div class="card-title">Phase 2 — workflow (in order)</div>
+    <ol>
+      <li>Create folder structure (Step 1)</li>
+      <li>Create shared types <code>src/types/index.ts</code> (Step 2)</li>
+      <li>Create placeholder pages (Step 3)</li>
+      <li>Wire React Router in <code>App.tsx</code> (Step 4)</li>
+      <li>Verify routes in browser (Step 5)</li>
+    </ol>
+  </div>
+
+  <h3>📁 Phase 2 — folders, types, routing (code + full explanation)</h3>
+
+  <details class="file-explainer" open>
+    <summary>Step 1 — Create folder structure</summary>
+    <div class="file-body">
+      <span class="file-role">Enterprise React app layout</span>
+      <p><strong>Why structure matters:</strong> Interviewers ask "how do you organize a large React app?" — this is the answer.</p>
+<pre>src/
+├── index.tsx              ← bootstrap (don't touch much)
+├── App.tsx                ← routes + providers
+├── types/
+│   └── index.ts           ← Invoice, Payment, User interfaces
+├── pages/
+│   ├── LoginPage.tsx
+│   ├── DashboardPage.tsx
+│   ├── InvoiceListPage.tsx
+│   └── PaymentHistoryPage.tsx
+├── components/
+│   ├── layout/            ← (Phase 4) AppLayout, Sidebar
+│   └── common/            ← (Phase 6) ErrorBoundary, Skeleton
+├── hooks/                 ← (Phase 4) useAuth, useThemeMode
+├── theme/                 ← (Phase 4) MUI createTheme
+└── graphql/               ← (Phase 3) schema, queries, mockData</pre>
+      <p><strong>Run in terminal</strong> (from invoice-dashboard):</p>
+<pre>mkdir -p src/types src/pages src/components/layout src/components/common src/hooks src/theme src/graphql</pre>
+      <p><strong>Rules:</strong></p>
+      <ul>
+        <li><strong>pages/</strong> — one file per route; fetches data, composes components</li>
+        <li><strong>components/</strong> — reusable UI; receives props only</li>
+        <li><strong>types/</strong> — single source of truth for data shapes</li>
+        <li><strong>hooks/</strong> — reusable logic extracted from components</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="file-explainer">
+    <summary>Step 2 — <code>src/types/index.ts</code></summary>
+    <div class="file-body">
+      <span class="file-role">Shared TypeScript interfaces</span>
+      <p><strong>What it is:</strong> Defines data shapes used across the app. GraphQL and components both use these types.</p>
+      <p><strong>Why now:</strong> Types first = fewer bugs when building pages in Phase 5.</p>
+<pre>export type InvoiceStatus = 'PAID' | 'PENDING' | 'OVERDUE' | 'DRAFT';
+
+export interface Invoice {
+  id: string;
+  invoiceNumber: string;
+  clientName: string;
+  clientEmail: string;
+  amount: number;
+  status: InvoiceStatus;
+  issueDate: string;
+  dueDate: string;
+  description: string;
+}
+
+export interface Payment {
+  id: string;
+  invoiceId: string;
+  invoiceNumber: string;
+  amount: number;
+  method: string;
+  paidAt: string;
+  status: string;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+export interface DashboardStats {
+  totalInvoices: number;
+  totalRevenue: number;
+  pendingAmount: number;
+  overdueCount: number;
+}</pre>
+      <p><strong>Key patterns:</strong></p>
+      <ul>
+        <li><code>type InvoiceStatus = 'PAID' | ...</code> — union type for fixed options</li>
+        <li><code>interface Invoice</code> — object shape for invoice data</li>
+        <li>Export everything — other files import from <code>@/types</code> or <code>../types</code></li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="file-explainer">
+    <summary>Step 3 — Create placeholder pages (4 files)</summary>
+    <div class="file-body">
+      <span class="file-role">One page component per route</span>
+      <p><strong>Pattern:</strong> Simple placeholder now — we'll add data + MUI in later phases.</p>
+
+      <p><strong><code>src/pages/LoginPage.tsx</code></strong></p>
+<pre>function LoginPage() {
+  return (
+    &lt;main&gt;
+      &lt;h1&gt;Login&lt;/h1&gt;
+      &lt;p&gt;Login form coming in Phase 5&lt;/p&gt;
+    &lt;/main&gt;
+  );
+}
+export default LoginPage;</pre>
+
+      <p><strong><code>src/pages/DashboardPage.tsx</code></strong></p>
+<pre>function DashboardPage() {
+  return (
+    &lt;main&gt;
+      &lt;h1&gt;Dashboard&lt;/h1&gt;
+      &lt;p&gt;Stats cards coming in Phase 5&lt;/p&gt;
+    &lt;/main&gt;
+  );
+}
+export default DashboardPage;</pre>
+
+      <p><strong><code>src/pages/InvoiceListPage.tsx</code></strong></p>
+<pre>function InvoiceListPage() {
+  return (
+    &lt;main&gt;
+      &lt;h1&gt;Invoices&lt;/h1&gt;
+      &lt;p&gt;Invoice table coming in Phase 5&lt;/p&gt;
+    &lt;/main&gt;
+  );
+}
+export default InvoiceListPage;</pre>
+
+      <p><strong><code>src/pages/PaymentHistoryPage.tsx</code></strong></p>
+<pre>function PaymentHistoryPage() {
+  return (
+    &lt;main&gt;
+      &lt;h1&gt;Payment History&lt;/h1&gt;
+      &lt;p&gt;Payments table coming in Phase 5&lt;/p&gt;
+    &lt;/main&gt;
+  );
+}
+export default PaymentHistoryPage;</pre>
+    </div>
+  </details>
+
+  <details class="file-explainer">
+    <summary>Step 4 — Update <code>src/App.tsx</code> with React Router</summary>
+    <div class="file-body">
+      <span class="file-role">Root component — defines all routes</span>
+      <p><strong>What it is:</strong> React Router maps URLs to page components. SPA = URL changes, React swaps components, no full page reload.</p>
+      <div class="analogy">🏠 Analogy: App.tsx is a building directory — /login → LoginPage room, /dashboard → DashboardPage room.</div>
+<pre>import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
+import InvoiceListPage from './pages/InvoiceListPage';
+import PaymentHistoryPage from './pages/PaymentHistoryPage';
+
+function App() {
+  return (
+    &lt;BrowserRouter&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/login" element={&lt;LoginPage /&gt;} /&gt;
+        &lt;Route path="/dashboard" element={&lt;DashboardPage /&gt;} /&gt;
+        &lt;Route path="/invoices" element={&lt;InvoiceListPage /&gt;} /&gt;
+        &lt;Route path="/payments" element={&lt;PaymentHistoryPage /&gt;} /&gt;
+        &lt;Route path="/" element={&lt;Navigate to="/dashboard" replace /&gt;} /&gt;
+        &lt;Route path="*" element={&lt;Navigate to="/dashboard" replace /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/BrowserRouter&gt;
+  );
+}
+
+export default App;</pre>
+      <p><strong>Line-by-line:</strong></p>
+      <ul>
+        <li><code>BrowserRouter</code> — enables routing for the whole app</li>
+        <li><code>Routes</code> — container for all route definitions</li>
+        <li><code>Route path="/login" element={...}</code> — URL → component mapping</li>
+        <li><code>Navigate to="/dashboard"</code> — redirect / and unknown URLs to dashboard</li>
+        <li><code>historyApiFallback</code> in webpack (Phase 1) — makes refresh on /dashboard work</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="file-explainer">
+    <summary>Step 5 — Verify routes in browser</summary>
+    <div class="file-body">
+<pre>npm start</pre>
+      <p><strong>Test these URLs manually:</strong></p>
+      <ul>
+        <li><code>http://localhost:3000/login</code> → Login page</li>
+        <li><code>http://localhost:3000/dashboard</code> → Dashboard page</li>
+        <li><code>http://localhost:3000/invoices</code> → Invoices page</li>
+        <li><code>http://localhost:3000/payments</code> → Payments page</li>
+        <li><code>http://localhost:3000/</code> → redirects to /dashboard</li>
+      </ul>
+      <p><strong>Refresh test:</strong> On /dashboard, press F5 — should NOT 404 (thanks to historyApiFallback).</p>
+    </div>
+  </details>
+
+  <div class="phase-checklist" data-phase="p1-phase2">
+    <label><input type="checkbox" data-id="p1-2-1"><span>Folder structure created (Step 1)</span></label>
+    <label><input type="checkbox" data-id="p1-2-2"><span>types/index.ts with Invoice, Payment, User (Step 2)</span></label>
+    <label><input type="checkbox" data-id="p1-2-3"><span>4 placeholder pages created (Step 3)</span></label>
+    <label><input type="checkbox" data-id="p1-2-4"><span>App.tsx wired with React Router (Step 4)</span></label>
+    <label><input type="checkbox" data-id="p1-2-5"><span>All routes work + refresh doesn't 404 (Step 5)</span></label>
+  </div>
+
+  <div class="card why">
+    <div class="card-title">Why folder structure matters</div>
+    <p>Enterprise teams enforce structure so 50 developers can work in the same codebase. Interviewers ask "how would you organize a large React app?" — your answer is this folder layout.</p>
+  </div>
+
+  <div class="card do">
+    <div class="card-title">Recommended folder structure</div>
+<pre>src/
+├── index.tsx          → ReactDOM.render / createRoot entry
+├── App.tsx            → Root component, routes, providers
+├── types/
+│   └── index.ts       → Shared TypeScript interfaces (Invoice, Payment)
+├── pages/
+│   ├── LoginPage.tsx
+│   ├── DashboardPage.tsx
+│   ├── InvoiceListPage.tsx
+│   └── PaymentHistoryPage.tsx
+├── components/
+│   ├── layout/        → AppLayout, Sidebar, Header
+│   ├── common/        → ErrorBoundary, LoadingSkeleton
+│   └── invoices/      → InvoiceTable, InvoiceFilters
+├── hooks/
+│   └── useAuth.ts
+├── theme/
+│   └── index.ts       → MUI createTheme
+└── graphql/
+    ├── schema.ts
+    ├── queries.ts
+    └── mockData.ts</pre>
+  </div>
+
+  <h3>Component architecture rules</h3>
+  <ul>
+    <li><strong>Pages</strong> — one per route; fetch data, compose components</li>
+    <li><strong>Components</strong> — reusable UI; receive props, no direct API calls</li>
+    <li><strong>Hooks</strong> — reusable logic (auth state, theme toggle)</li>
+    <li><strong>Types</strong> — single source of truth for data shapes</li>
+  </ul>
+
+  <div class="phase-checklist" data-phase="p1-phase2">
+    <label><input type="checkbox" data-id="p1-2-1"><span>Folder structure created</span></label>
+    <label><input type="checkbox" data-id="p1-2-2"><span>App.tsx with React Router setup</span></label>
+    <label><input type="checkbox" data-id="p1-2-3"><span>Shared types defined (Invoice, Payment, User)</span></label>
+    <label><input type="checkbox" data-id="p1-2-4"><span>Understand pages vs components distinction</span></label>
+  </div>
+
+  <div class="card interview">
+    <div class="card-title">🎤 Interview Questions — Phase 2: React + TS (click to reveal answers)</div>
+    <div class="interview-qa">
+      <p class="hint">Try answering aloud first, then click to check.</p>
+
+      <details class="iq-dropdown">
+        <summary>How do you structure a large React application?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Feature-based or layer-based structure: <code>pages/</code> (route-level components), <code>components/</code> (reusable UI), <code>hooks/</code> (shared logic), <code>types/</code> (TypeScript interfaces), <code>graphql/</code> or <code>api/</code> (data layer), <code>theme/</code> (styling). Pages compose components; components stay dumb and reusable; hooks extract logic. This scales because teams can own features without stepping on each other.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is the difference between a page component and a presentational component?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <strong>Page (container/smart):</strong> tied to a route, fetches data (useQuery), manages state, passes data down. <strong>Presentational (dumb):</strong> receives props, renders UI, no API calls — e.g. InvoiceTable receives invoices array as prop. This separation makes presentational components reusable and easy to test in Storybook without mocking APIs.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What are TypeScript interfaces vs types? When use each?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Both define shapes. <code>interface</code> can be extended/merged (declaration merging) — good for object shapes and public APIs. <code>type</code> can represent unions, primitives, tuples — e.g. <code>type Status = 'PAID' | 'PENDING'</code>. Convention: use <code>interface</code> for object props/models, <code>type</code> for unions and utility types. Functionally similar for most cases.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is React 18's createRoot and why replaced ReactDOM.render?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <code>createRoot</code> enables React 18's concurrent features — automatic batching, transitions, Suspense improvements. Old <code>ReactDOM.render()</code> was synchronous and is deprecated. New API: <code>createRoot(container).render(&lt;App /&gt;)</code>. Concurrent mode lets React interrupt low-priority renders for better UX (e.g. keep input responsive while heavy list renders).</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>Explain props vs state. When to lift state up?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <strong>Props</strong> — data passed from parent to child, read-only in child. <strong>State</strong> — data owned and managed by a component, changes trigger re-render. <strong>Lift state up</strong> when two sibling components need the same data — move state to their closest common parent and pass down via props. Example: search term in InvoiceListPage passed to both FilterBar and InvoiceTable.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What are custom hooks and why extract logic into them?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Custom hooks (functions starting with <code>use</code>) encapsulate reusable stateful logic — e.g. <code>useAuth()</code>, <code>useThemeMode()</code>. They let you share logic between components without duplicating code or using HOCs/render props. Rules: can call other hooks, must follow Rules of Hooks. Keeps components focused on rendering.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is the virtual DOM and how does React's reconciliation work?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Virtual DOM is an in-memory JavaScript representation of the real DOM. On state change, React creates a new virtual DOM tree, diffs it against the previous tree (reconciliation), and updates only the changed nodes in the real DOM. This is faster than manipulating the DOM directly for every change. React 18's Fiber architecture allows interruptible rendering for better performance.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== P1 PHASE 3 ===================== -->
+<section id="p1-phase3">
+  <h2><span class="badge badge-day1">Day 1</span> Phase 3: GraphQL + Apollo Client <span class="phase-status current">→ In progress</span></h2>
+  <span class="badge badge-time">~1.5 hours</span>
+
+  <div class="card why">
+    <div class="card-title">Why GraphQL + mock schema?</div>
+    <p>No backend needed. You define a GraphQL schema + resolvers locally. Apollo <code>SchemaLink</code> connects your React app to mock invoice data. Same patterns as a real API — swap to <code>HttpLink</code> in production.</p>
+  </div>
+
+  <div class="card do">
+    <div class="card-title">Phase 3 — workflow (in order)</div>
+    <ol>
+      <li>Install <code>@graphql-tools/schema</code> (Step 0)</li>
+      <li>Create <code>src/types/index.ts</code> (Step 1 — if not done in Phase 2)</li>
+      <li>Create <code>src/graphql/mockData.ts</code> (Step 2)</li>
+      <li>Create <code>src/graphql/schema.ts</code> (Step 3)</li>
+      <li>Create <code>src/graphql/resolvers.ts</code> (Step 4)</li>
+      <li>Create <code>src/graphql/queries.ts</code> (Step 5)</li>
+      <li>Create <code>src/graphql/client.ts</code> (Step 6)</li>
+      <li>Wrap app in <code>ApolloProvider</code> (Step 7)</li>
+      <li>Test <code>useQuery</code> on DashboardPage (Step 8)</li>
+    </ol>
+  </div>
+
+  <h3>📁 Phase 3 — GraphQL mock API (code + full explanation)</h3>
+
+  <details class="file-explainer" open>
+    <summary>Step 0 — Install schema tools</summary>
+    <div class="file-body">
+      <p><strong>Why:</strong> Apollo's <code>SchemaLink</code> needs an executable schema built from typeDefs + resolvers.</p>
+<pre>npm install @graphql-tools/schema</pre>
+    </div>
+  </details>
+
+  <details class="file-explainer">
+    <summary>Step 1 — <code>src/types/index.ts</code> (skip if already created)</summary>
+    <div class="file-body">
+      <p>See Phase 2 Step 2 — shared interfaces for Invoice, Payment, User, DashboardStats.</p>
+    </div>
+  </details>
+
+  <details class="file-explainer">
+    <summary>Step 2 — <code>src/graphql/mockData.ts</code></summary>
+    <div class="file-body">
+      <span class="file-role">Fake database — your invoice/payment records</span>
+      <p><strong>What it is:</strong> Arrays of fake data. Resolvers read/filter this instead of calling a real API.</p>
+<pre>import { Invoice, Payment } from '../types';
+
+export const mockInvoices: Invoice[] = [
+  {
+    id: '1',
+    invoiceNumber: 'INV-001',
+    clientName: 'Acme Corp',
+    clientEmail: 'billing@acme.com',
+    amount: 2500,
+    status: 'PAID',
+    issueDate: '2026-01-15',
+    dueDate: '2026-02-15',
+    description: 'Web development services',
+  },
+  {
+    id: '2',
+    invoiceNumber: 'INV-002',
+    clientName: 'Globex Inc',
+    clientEmail: 'ap@globex.com',
+    amount: 1800,
+    status: 'PENDING',
+    issueDate: '2026-02-01',
+    dueDate: '2026-03-01',
+    description: 'UI/UX design package',
+  },
+  {
+    id: '3',
+    invoiceNumber: 'INV-003',
+    clientName: 'Initech',
+    clientEmail: 'finance@initech.com',
+    amount: 4200,
+    status: 'OVERDUE',
+    issueDate: '2025-12-01',
+    dueDate: '2026-01-01',
+    description: 'Annual support contract',
+  },
+];
+
+export const mockPayments: Payment[] = [
+  {
+    id: 'p1',
+    invoiceId: '1',
+    invoiceNumber: 'INV-001',
+    amount: 2500,
+    method: 'Credit Card',
+    paidAt: '2026-02-10',
+    status: 'Completed',
+  },
+];
+
+export const DEMO_USER = {
+  email: 'demo@invoicecloud.com',
+  password: 'password123',
+};</pre>
+    </div>
+  </details>
+
+  <details class="file-explainer">
+    <summary>Step 3 — <code>src/graphql/schema.ts</code></summary>
+    <div class="file-body">
+      <span class="file-role">GraphQL contract — types, queries, mutations</span>
+      <p><strong>What it is:</strong> SDL (Schema Definition Language) describing what data clients can request.</p>
+<pre>import { gql } from '@apollo/client';
+
+export const typeDefs = gql`
+  enum InvoiceStatus {
+    PAID
+    PENDING
+    OVERDUE
+    DRAFT
+  }
+
+  type User {
+    id: ID!
+    name: String!
+    email: String!
+    role: String!
+  }
+
+  type AuthPayload {
+    token: String!
+    user: User!
+  }
+
+  type Invoice {
+    id: ID!
+    invoiceNumber: String!
+    clientName: String!
+    clientEmail: String!
+    amount: Float!
+    status: InvoiceStatus!
+    issueDate: String!
+    dueDate: String!
+    description: String!
+  }
+
+  type Payment {
+    id: ID!
+    invoiceId: ID!
+    invoiceNumber: String!
+    amount: Float!
+    method: String!
+    paidAt: String!
+    status: String!
+  }
+
+  type DashboardStats {
+    totalInvoices: Int!
+    totalRevenue: Float!
+    pendingAmount: Float!
+    overdueCount: Int!
+  }
+
+  input InvoiceFilterInput {
+    search: String
+    status: String
+  }
+
+  type Query {
+    dashboardStats: DashboardStats!
+    invoices(filter: InvoiceFilterInput): [Invoice!]!
+    payments: [Payment!]!
+  }
+
+  type Mutation {
+    login(email: String!, password: String!): AuthPayload!
+  }
+`;</pre>
+    </div>
+  </details>
+
+  <details class="file-explainer">
+    <summary>Step 4 — <code>src/graphql/resolvers.ts</code></summary>
+    <div class="file-body">
+      <span class="file-role">Functions that return data for each query/mutation</span>
+      <p><strong>What it is:</strong> Like API route handlers — but for GraphQL fields.</p>
+<pre>import { mockInvoices, mockPayments, DEMO_USER } from './mockData';
+import { Invoice } from '../types';
+
+export const resolvers = {
+  Query: {
+    dashboardStats: () => {
+      const paid = mockInvoices.filter((i) => i.status === 'PAID');
+      const pending = mockInvoices.filter((i) => i.status === 'PENDING');
+      const overdue = mockInvoices.filter((i) => i.status === 'OVERDUE');
+      return {
+        totalInvoices: mockInvoices.length,
+        totalRevenue: paid.reduce((sum, i) => sum + i.amount, 0),
+        pendingAmount: pending.reduce((sum, i) => sum + i.amount, 0),
+        overdueCount: overdue.length,
+      };
+    },
+    invoices: (_: unknown, { filter }: { filter?: { search?: string; status?: string } }) => {
+      let result = [...mockInvoices];
+      if (filter?.search) {
+        const q = filter.search.toLowerCase();
+        result = result.filter(
+          (i) => i.clientName.toLowerCase().includes(q) || i.invoiceNumber.toLowerCase().includes(q),
+        );
+      }
+      if (filter?.status && filter.status !== 'ALL') {
+        result = result.filter((i) => i.status === filter.status);
+      }
+      return result;
+    },
+    payments: () => mockPayments,
+  },
+  Mutation: {
+    login: (_: unknown, { email, password }: { email: string; password: string }) => {
+      if (email === DEMO_USER.email && password === DEMO_USER.password) {
+        return {
+          token: 'mock-jwt-token',
+          user: { id: '1', name: 'Demo User', email, role: 'admin' },
+        };
+      }
+      throw new Error('Invalid email or password');
+    },
+  },
+};</pre>
+    </div>
+  </details>
+
+  <details class="file-explainer">
+    <summary>Step 5 — <code>src/graphql/queries.ts</code></summary>
+    <div class="file-body">
+      <span class="file-role">Queries/mutations your React components call</span>
+<pre>import { gql } from '@apollo/client';
+
+export const GET_DASHBOARD_STATS = gql`
+  query GetDashboardStats {
+    dashboardStats {
+      totalInvoices
+      totalRevenue
+      pendingAmount
+      overdueCount
+    }
+  }
+`;
+
+export const GET_INVOICES = gql`
+  query GetInvoices($filter: InvoiceFilterInput) {
+    invoices(filter: $filter) {
+      id
+      invoiceNumber
+      clientName
+      amount
+      status
+      dueDate
+    }
+  }
+`;
+
+export const GET_PAYMENTS = gql`
+  query GetPayments {
+    payments {
+      id
+      invoiceNumber
+      amount
+      method
+      paidAt
+      status
+    }
+  }
+`;
+
+export const LOGIN_MUTATION = gql`
+  mutation Login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+      user { id name email }
+    }
+  }
+`;</pre>
+    </div>
+  </details>
+
+  <details class="file-explainer">
+    <summary>Step 6 — <code>src/graphql/client.ts</code></summary>
+    <div class="file-body">
+      <span class="file-role">Apollo Client + SchemaLink wiring</span>
+      <p><strong>What it does:</strong> Builds executable schema, connects Apollo cache to local resolvers.</p>
+<pre>import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { SchemaLink } from '@apollo/client/link/schema';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { typeDefs } from './schema';
+import { resolvers } from './resolvers';
+
+const schema = makeExecutableSchema({ typeDefs, resolvers });
+
+export const client = new ApolloClient({
+  link: new SchemaLink({ schema }),
+  cache: new InMemoryCache(),
+});</pre>
+      <div class="analogy">🏠 Analogy: SchemaLink = phone call to yourself. HttpLink (production) = phone call to real server. Same queries, different link.</div>
+    </div>
+  </details>
+
+  <details class="file-explainer">
+    <summary>Step 7 — Wrap app in <code>ApolloProvider</code> (<code>src/index.tsx</code>)</summary>
+    <div class="file-body">
+<pre>import { createRoot } from 'react-dom/client';
+import { ApolloProvider } from '@apollo/client';
+import App from './App';
+import { client } from './graphql/client';
+
+const container = document.getElementById('root');
+if (!container) throw new Error('Root element not found');
+
+createRoot(container).render(
+  &lt;ApolloProvider client={client}&gt;
+    &lt;App /&gt;
+  &lt;/ApolloProvider&gt;,
+);</pre>
+    </div>
+  </details>
+
+  <details class="file-explainer">
+    <summary>Step 8 — Test on <code>DashboardPage.tsx</code></summary>
+    <div class="file-body">
+<pre>import { useQuery } from '@apollo/client';
+import { GET_DASHBOARD_STATS } from '../graphql/queries';
+
+function DashboardPage() {
+  const { data, loading, error } = useQuery(GET_DASHBOARD_STATS);
+
+  if (loading) return &lt;main&gt;&lt;p&gt;Loading stats...&lt;/p&gt;&lt;/main&gt;;
+  if (error) return &lt;main&gt;&lt;p&gt;Error: {error.message}&lt;/p&gt;&lt;/main&gt;;
+
+  const stats = data.dashboardStats;
+  return (
+    &lt;main&gt;
+      &lt;h1&gt;Dashboard&lt;/h1&gt;
+      &lt;ul&gt;
+        &lt;li&gt;Total Invoices: {stats.totalInvoices}&lt;/li&gt;
+        &lt;li&gt;Total Revenue: ${stats.totalRevenue}&lt;/li&gt;
+        &lt;li&gt;Pending: ${stats.pendingAmount}&lt;/li&gt;
+        &lt;li&gt;Overdue: {stats.overdueCount}&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/main&gt;
+  );
+}
+
+export default DashboardPage;</pre>
+      <p><strong>Verify:</strong> Go to <code>/dashboard</code> — should show stats from mockData (3 invoices, etc.).</p>
+    </div>
+  </details>
+
+  <div class="phase-checklist" data-phase="p1-phase3">
+    <label><input type="checkbox" data-id="p1-3-1"><span>GraphQL schema defined</span></label>
+    <label><input type="checkbox" data-id="p1-3-2"><span>Queries written (GET_INVOICES, GET_PAYMENTS, LOGIN)</span></label>
+    <label><input type="checkbox" data-id="p1-3-3"><span>Apollo Client configured</span></label>
+    <label><input type="checkbox" data-id="p1-3-4"><span>useQuery returns data in a component</span></label>
+    <label><input type="checkbox" data-id="p1-3-5"><span>Loading and error states handled</span></label>
+  </div>
+
+  <div class="card interview">
+    <div class="card-title">🎤 Interview Questions — Phase 3: GraphQL + Apollo (click to reveal answers)</div>
+    <div class="interview-qa">
+      <p class="hint">Try answering aloud first, then click to check.</p>
+
+      <details class="iq-dropdown">
+        <summary>What problem does GraphQL solve that REST doesn't?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> REST returns fixed data shapes per endpoint — often over-fetching (too much data) or under-fetching (need multiple requests). GraphQL lets the client request exactly the fields it needs in one query. One request for invoices with nested payments vs three REST calls. Also: strongly typed schema serves as a contract between frontend and backend teams.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>Explain query vs mutation vs subscription.</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <strong>Query</strong> — read data (like GET), e.g. fetch invoices. <strong>Mutation</strong> — write/change data (like POST/PUT/DELETE), e.g. login, create invoice. <strong>Subscription</strong> — real-time updates over WebSocket, e.g. live payment notifications. Queries are cacheable; mutations invalidate/update cache; subscriptions push data continuously.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is the Apollo Client cache and how does it work?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Apollo Client normalizes API responses into a flat, in-memory cache keyed by type+ID. When you query the same invoice twice, the second call returns cached data instantly (no network request). Mutations can update the cache directly. <code>fetchPolicy</code> controls behavior: <code>cache-first</code> (default), <code>network-only</code>, <code>cache-and-network</code>. Dramatically reduces unnecessary API calls in dashboards.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is the N+1 problem in GraphQL?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> When fetching a list of N items, the resolver makes 1 query for the list + N individual queries for related data — e.g. 1 query for 100 invoices + 100 queries for each invoice's payments = 101 DB calls. Solutions: DataLoader (batch requests), join queries at DB level, or Hasura-style relationship resolution. A common backend performance issue interviewers test for.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How do you handle loading and error states with useQuery?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <code>const { data, loading, error } = useQuery(GET_INVOICES)</code>. Show skeleton/spinner when <code>loading</code> is true. Show error message/retry button when <code>error</code> exists. Render data when loaded. Never show blank screen during loading — use MUI Skeleton components matching the final layout shape for better perceived performance.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is a GraphQL schema? Who defines it?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> The schema is the typed contract defining all types, queries, mutations, and subscriptions available in the API. Written in Schema Definition Language (SDL). Usually defined by the backend team (or auto-generated by Hasura from a database). Frontend teams use it to write queries and can generate TypeScript types from it via GraphQL Codegen.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is fetchPolicy in Apollo and when would you change it?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Controls how Apollo interacts with cache vs network. <code>cache-first</code> — check cache, fetch if missing (default). <code>network-only</code> — always fetch, ignore cache (fresh data on every visit). <code>cache-and-network</code> — return cache immediately, also fetch fresh data (good for dashboards). Use <code>network-only</code> for payment data; <code>cache-first</code> for static reference data.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How is GraphQL typed with TypeScript (codegen)?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> GraphQL Code Generator reads your schema + query files and auto-generates TypeScript types for queries, mutations, and variables. Example: <code>useQuery&lt;GetInvoicesQuery, GetInvoicesQueryVariables&gt;</code>. Eliminates manual type definitions, catches mismatches between frontend queries and backend schema at compile time. Run as part of CI pipeline when schema changes.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== P1 PHASE 4 ===================== -->
+<section id="p1-phase4">
+  <h2><span class="badge badge-day1">Day 1</span> Phase 4: Material UI + Dark/Light Theme <span class="phase-status pending">Upcoming</span></h2>
+  <span class="badge badge-time">~1 hour</span>
+
+  <div class="card warn">
+    <div class="card-title">📓 Phase notebook</div>
+    <p>Theme setup, dark/light toggle, responsive layout — full code added when you reach this phase.</p>
+  </div>
+
+  <div class="card why">
+    <div class="card-title">Why MUI?</div>
+    <p>Material UI is the most used React component library in enterprise. It gives you accessible, responsive components out of the box. InvoiceCloud likely uses something similar.</p>
+  </div>
+
+  <div class="card do">
+    <div class="card-title">Theme setup steps</div>
+    <ol>
+      <li>Install <code>@mui/material @emotion/react @emotion/styled @mui/icons-material</code></li>
+      <li>Create <code>theme/index.ts</code> with <code>createTheme({ palette: { mode } })</code></li>
+      <li>Wrap app: <code>&lt;ThemeProvider theme={theme}&gt;&lt;CssBaseline /&gt;</code></li>
+      <li>Create <code>useThemeMode</code> hook — stores preference in localStorage</li>
+      <li>Add toggle button in header (Brightness4/Brightness7 icons)</li>
+    </ol>
+  </div>
+
+  <h3>Responsive design with MUI</h3>
+  <ul>
+    <li><code>useMediaQuery(theme.breakpoints.down('md'))</code> — detect mobile</li>
+    <li><code>&lt;Grid container spacing={2}&gt;</code> — responsive grid</li>
+    <li><code>sx={{ display: { xs: 'none', md: 'block' } }}</code> — hide sidebar on mobile</li>
+    <li><code>&lt;Drawer variant="temporary"&gt;</code> — mobile navigation</li>
+  </ul>
+
+  <div class="phase-checklist" data-phase="p1-phase4">
+    <label><input type="checkbox" data-id="p1-4-1"><span>ThemeProvider + CssBaseline working</span></label>
+    <label><input type="checkbox" data-id="p1-4-2"><span>Dark/light toggle persists in localStorage</span></label>
+    <label><input type="checkbox" data-id="p1-4-3"><span>Layout responsive on mobile</span></label>
+    <label><input type="checkbox" data-id="p1-4-4"><span>Sidebar collapses to drawer on small screens</span></label>
+  </div>
+
+  <div class="card interview">
+    <div class="card-title">🎤 Interview Questions — Phase 4: MUI + Theming (click to reveal answers)</div>
+    <div class="interview-qa">
+      <p class="hint">Try answering aloud first, then click to check.</p>
+
+      <details class="iq-dropdown">
+        <summary>How does MUI theming work? What is createTheme?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <code>createTheme()</code> generates a theme object with palette (colors), typography, spacing, breakpoints, and component overrides. Wrap app in <code>&lt;ThemeProvider theme={theme}&gt;</code> — all MUI components inherit these values. Changing <code>palette.mode: 'dark'</code> automatically updates all component colors. Centralizes design tokens — change primary color once, updates everywhere.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is the sx prop vs styled components vs makeStyles?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <code>sx</code> — inline style prop with theme access, best for one-off overrides. <code>styled()</code> — creates reusable styled components, best for repeated patterns. <code>makeStyles</code> — deprecated (JSS-based, removed in MUI v5). Modern approach: <code>sx</code> for quick changes, <code>styled()</code> for component library pieces. Both use Emotion under the hood.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How do you implement dark mode in a React app?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> 1) Store preference in state + localStorage. 2) Create theme with <code>createTheme({ palette: { mode: isDark ? 'dark' : 'light' } })</code>. 3) Pass to ThemeProvider. 4) Toggle button updates state → new theme → all components re-render with dark palette. Optionally detect system preference with <code>window.matchMedia('(prefers-color-scheme: dark)')</code>.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What are MUI breakpoints and how do you build mobile-first layouts?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Breakpoints: xs(0), sm(600px), md(900px), lg(1200px), xl(1536px). Mobile-first means default styles target xs, then add overrides for larger screens: <code>sx={{ width: { xs: '100%', md: '240px' } }}</code>. Use <code>useMediaQuery(theme.breakpoints.down('md'))</code> for conditional logic. Grid system: <code>&lt;Grid item xs={12} md={6}&gt;</code> — full width mobile, half on desktop.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is CssBaseline and why use it?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> CssBaseline applies MUI's normalized CSS reset across browsers — consistent margins, box-sizing, font rendering, background color matching theme. Like a more opinionated normalize.css integrated with your theme. Place inside ThemeProvider. Without it, components look inconsistent across Chrome/Firefox/Safari due to different browser default styles.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How does Emotion (MUI's styling engine) work under the hood?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Emotion is a CSS-in-JS library. When you use <code>sx</code> or <code>styled()</code>, Emotion generates unique class names at runtime, injects styles into &lt;style&gt; tags in the DOM, and handles specificity. Styles are scoped to components automatically. Supports theming via React context. Alternative was JSS (removed in MUI v5) — Emotion is faster and has better SSR support.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== P1 PHASE 5 ===================== -->
+<section id="p1-phase5">
+  <h2><span class="badge badge-day1">Day 1</span> Phase 5: Pages & Routing + Code Splitting <span class="phase-status pending">Upcoming</span></h2>
+  <span class="badge badge-time">~2 hours</span>
+
+  <div class="card warn">
+    <div class="card-title">📓 Phase notebook</div>
+    <p>All pages, React Router, React.lazy, ProtectedRoute — full code added when you reach this phase.</p>
+  </div>
+
+  <div class="card do">
+    <div class="card-title">Pages to build</div>
+    <ul>
+      <li><strong>LoginPage</strong> — email/password form, calls LOGIN mutation, redirects to dashboard</li>
+      <li><strong>DashboardPage</strong> — stats cards (total invoices, revenue, pending, overdue)</li>
+      <li><strong>InvoiceListPage</strong> — table with search + status filter</li>
+      <li><strong>PaymentHistoryPage</strong> — table of past payments</li>
+    </ul>
+  </div>
+
+  <h3>Lazy loading — the interview gold</h3>
+<pre>// App.tsx — each page loads ONLY when visited
+const DashboardPage = React.lazy(() => import('./pages/DashboardPage'));
+
+&lt;Suspense fallback={&lt;LoadingSkeleton /&gt;}&gt;
+  &lt;Routes&gt;
+    &lt;Route path="/dashboard" element={&lt;DashboardPage /&gt;} /&gt;
+  &lt;/Routes&gt;
+&lt;/Suspense&gt;</pre>
+  <p>After <code>npm run build</code>, check <code>dist/js/</code> — you'll see separate chunk files per page. That's code splitting working.</p>
+
+  <div class="card do">
+    <div class="card-title">Protected routes</div>
+    <p>Create a <code>ProtectedRoute</code> component that checks if user is logged in (token in localStorage). Redirect to <code>/login</code> if not.</p>
+  </div>
+
+  <div class="phase-checklist" data-phase="p1-phase5">
+    <label><input type="checkbox" data-id="p1-5-1"><span>LoginPage with form validation</span></label>
+    <label><input type="checkbox" data-id="p1-5-2"><span>DashboardPage with stat cards</span></label>
+    <label><input type="checkbox" data-id="p1-5-3"><span>InvoiceListPage with MUI DataGrid or Table</span></label>
+    <label><input type="checkbox" data-id="p1-5-4"><span>PaymentHistoryPage</span></label>
+    <label><input type="checkbox" data-id="p1-5-5"><span>React.lazy + Suspense on all pages</span></label>
+    <label><input type="checkbox" data-id="p1-5-6"><span>ProtectedRoute guards dashboard routes</span></label>
+  </div>
+
+  <div class="card interview">
+    <div class="card-title">🎤 Interview Questions — Phase 5: Routing + Code Splitting (click to reveal answers)</div>
+    <div class="interview-qa">
+      <p class="hint">Try answering aloud first, then click to check.</p>
+
+      <details class="iq-dropdown">
+        <summary>How does React Router v6 handle nested routes?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Parent route renders an <code>&lt;Outlet /&gt;</code> where child routes appear. Example: AppLayout at <code>/</code> wraps all pages; <code>/dashboard</code> and <code>/invoices</code> render inside the outlet while keeping sidebar/header. Defined with nested <code>&lt;Route&gt;</code> elements. Index routes (<code>index</code> prop) render at the parent's path. Layout routes share UI without re-mounting.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is code splitting and why does it improve performance?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Instead of one giant JS file, code is split into chunks loaded on demand. Initial page load only downloads what's needed (login page code, not dashboard code). Reduces Time to Interactive (TTI) — users see content faster. Especially important for large apps with MUI + many pages. Measured via Lighthouse performance score and bundle analyzer.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>Explain React.lazy and Suspense — how do they work together?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <code>React.lazy(() =&gt; import('./Page'))</code> returns a component that loads its code asynchronously when first rendered — Webpack creates a separate chunk. <code>&lt;Suspense fallback={&lt;Skeleton /&gt;}&gt;</code> wraps lazy components and shows fallback UI while the chunk loads. Together: route visited → chunk downloads → fallback shown → component renders. Must wrap all lazy components in Suspense.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is the difference between static and dynamic imports?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <strong>Static:</strong> <code>import App from './App'</code> — resolved at build time, included in main bundle. <strong>Dynamic:</strong> <code>import('./App')</code> — returns a Promise, Webpack creates a separate async chunk loaded at runtime. Static = always loaded. Dynamic = loaded when needed. React.lazy uses dynamic imports internally.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How do you protect routes in a React SPA?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Create a <code>ProtectedRoute</code> wrapper that checks auth state (token in localStorage/context). If authenticated → render child route. If not → redirect to <code>/login</code> via <code>&lt;Navigate to="/login" /&gt;</code>. Wrap protected routes: <code>&lt;Route element={&lt;ProtectedRoute /&gt;}&gt;</code>. Note: this is client-side only — real security requires server-side token validation.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What happens to the bundle when you lazy load a route? How do you verify it?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Webpack creates separate chunk files — e.g. <code>DashboardPage.chunk.js</code>, <code>InvoiceListPage.chunk.js</code> — in addition to main.js. Verify: run <code>npm run build</code>, inspect <code>dist/js/</code> — you'll see multiple .js files. Use webpack-bundle-analyzer for visual breakdown. Each lazy route = one additional chunk loaded only when that route is visited.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== P1 PHASE 6 ===================== -->
+<section id="p1-phase6">
+  <h2><span class="badge badge-day1">Day 1</span> Phase 6: Search, Skeletons, Error Boundaries, Accessibility <span class="phase-status pending">Upcoming</span></h2>
+  <span class="badge badge-time">~2 hours</span>
+
+  <div class="card warn">
+    <div class="card-title">📓 Phase notebook</div>
+    <p>Search/filter, MUI Skeletons, ErrorBoundary, keyboard a11y — full code added when you reach this phase.</p>
+  </div>
+
+  <h3>Search & Filter</h3>
+  <p>Pass filter variables to your GraphQL query. Client-side filter on mock data, or server-side with Hasura.</p>
+<pre>const { data, loading } = useQuery(GET_INVOICES, {
+  variables: { filter: { search: searchTerm, status: selectedStatus } }
+});</pre>
+
+  <h3>Loading Skeletons</h3>
+  <p>MUI provides <code>&lt;Skeleton variant="rectangular" height={40} /&gt;</code>. Show skeleton layout while <code>loading === true</code>. Never show a blank screen.</p>
+
+  <h3>Error Boundaries</h3>
+  <p>React class component that catches JS errors in child tree. Wrap each page or the whole app.</p>
+<pre>class ErrorBoundary extends React.Component {
+  state = { hasError: false };
+  static getDerivedStateFromError() { return { hasError: true }; }
+  render() {
+    if (this.state.hasError) return &lt;ErrorFallback /&gt;;
+    return this.props.children;
+  }
+}</pre>
+
+  <h3>Accessibility (a11y) checklist</h3>
+  <ul>
+    <li>All interactive elements reachable via Tab key</li>
+    <li>Buttons have accessible labels (<code>aria-label</code>)</li>
+    <li>Form inputs linked to labels (<code>htmlFor</code> + <code>id</code>)</li>
+    <li>Focus trapped inside Modal when open; Escape closes it</li>
+    <li>Color contrast ratio ≥ 4.5:1 (MUI themes usually pass)</li>
+    <li>Skip navigation link for keyboard users</li>
+  </ul>
+
+  <div class="phase-checklist" data-phase="p1-phase6">
+    <label><input type="checkbox" data-id="p1-6-1"><span>Search filters invoice list</span></label>
+    <label><input type="checkbox" data-id="p1-6-2"><span>Status filter dropdown works</span></label>
+    <label><input type="checkbox" data-id="p1-6-3"><span>Loading skeletons on all data pages</span></label>
+    <label><input type="checkbox" data-id="p1-6-4"><span>ErrorBoundary wraps app</span></label>
+    <label><input type="checkbox" data-id="p1-6-5"><span>Tab navigation works through all pages</span></label>
+    <label><input type="checkbox" data-id="p1-6-6"><span>ESLint jsx-a11y passes</span></label>
+  </div>
+
+  <div class="card interview">
+    <div class="card-title">🎤 Interview Questions — Phase 6: Features + a11y (click to reveal answers)</div>
+    <div class="interview-qa">
+      <p class="hint">Try answering aloud first, then click to check.</p>
+
+      <details class="iq-dropdown">
+        <summary>What is an Error Boundary and what errors does it NOT catch?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> A React class component that catches JavaScript errors in its child tree and shows a fallback UI instead of crashing the whole app. Uses <code>getDerivedStateFromError</code> and <code>componentDidCatch</code>. Does NOT catch: errors in event handlers, async code (setTimeout, promises), server-side rendering, or errors in the boundary itself. For async errors, use try/catch in the async function.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>Why use loading skeletons instead of spinners?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Skeletons mirror the shape of the final content (table rows, cards) — users perceive less loading time and no layout shift when data arrives. Spinners give no indication of what's coming and cause content to jump when loaded (bad CLS score). Skeletons improve perceived performance and are the modern UX standard for dashboards and data-heavy apps.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is WCAG and what are the key accessibility principles?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Web Content Accessibility Guidelines — international standard for accessible web content. Four principles (POUR): <strong>P</strong>erceivable (text alternatives, color contrast), <strong>O</strong>perable (keyboard navigable, no seizure triggers), <strong>U</strong>nderstandable (readable, predictable), <strong>R</strong>obust (works with assistive tech). Level AA is the legal standard most companies target.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How do you make a React app keyboard navigable?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Use semantic HTML (button not div for clicks). Ensure logical Tab order. All interactive elements focusable. Visible focus indicators (outline). Skip navigation link. Arrow keys for menus/tabs. Escape closes modals. Enter/Space activates buttons. Test by unplugging your mouse and navigating the entire app with keyboard only.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What ARIA attributes do you know and when to use them?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <code>aria-label</code> — accessible name when no visible label. <code>aria-expanded</code> — accordion/dropdown open state. <code>aria-selected</code> — active tab. <code>aria-modal="true"</code> — dialog traps focus. <code>role="alert"</code> — error messages announced immediately. <code>aria-live="polite"</code> — toast announcements. Rule: use semantic HTML first; ARIA only when HTML alone isn't sufficient.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is focus management and why is it important in modals?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Focus management controls where keyboard focus goes. In modals: move focus to modal on open, trap focus inside (Tab cycles within modal only), return focus to trigger element on close. Without this, keyboard users Tab behind the modal into the page underneath. Implemented via ref.focus() on open and focus trap libraries or manual keydown handlers.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How does eslint-plugin-jsx-a11y help?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> ESLint plugin that statically analyzes JSX for accessibility violations at write-time — missing alt text, click handlers on non-interactive elements, missing form labels, incorrect ARIA usage. Catches issues before runtime. Configure in .eslintrc with <code>"plugin:jsx-a11y/recommended"</code>. Acts as a first line of defense; still need manual keyboard testing.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== P1 PHASE 7 ===================== -->
+<section id="p1-phase7">
+  <h2><span class="badge badge-day1">Day 1</span> Phase 7: ESLint, Prettier, Production Build <span class="phase-status pending">Upcoming</span></h2>
+  <span class="badge badge-time">~45 min</span>
+
+  <div class="card warn">
+    <div class="card-title">📓 Phase notebook</div>
+    <p>ESLint/Prettier config files, lint fixes, final production verification — added when you reach this phase.</p>
+  </div>
+
+  <div class="card do">
+    <div class="card-title">Final steps</div>
+    <ol>
+      <li>Configure ESLint (.eslintrc.json) + Prettier (.prettierrc)</li>
+      <li>Run <code>npm run lint</code> — fix all warnings</li>
+      <li>Run <code>npm run build</code> — production bundle in <code>dist/</code></li>
+      <li>Open <code>dist/js/</code> — verify multiple chunk files exist (code splitting proof)</li>
+      <li>Check bundle sizes — MUI should be in separate vendor chunk</li>
+    </ol>
+  </div>
+
+  <h3>Tree shaking — what to say in interview</h3>
+  <p>Webpack's production mode enables tree shaking: unused exports are eliminated from the final bundle. Works with ES modules (<code>import/export</code>), NOT with CommonJS (<code>require</code>).</p>
+
+  <div class="phase-checklist" data-phase="p1-phase7">
+    <label><input type="checkbox" data-id="p1-7-1"><span>ESLint configured and passing</span></label>
+    <label><input type="checkbox" data-id="p1-7-2"><span>Prettier formatting consistent</span></label>
+    <label><input type="checkbox" data-id="p1-7-3"><span>Production build succeeds</span></label>
+    <label><input type="checkbox" data-id="p1-7-4"><span>Verified code splitting in dist/js/</span></label>
+    <label><input type="checkbox" data-id="p1-7-5"><span>Can explain tree shaking</span></label>
+  </div>
+
+  <div class="card interview">
+    <div class="card-title">🎤 Interview Questions — Phase 7: Tooling + Production (click to reveal answers)</div>
+    <div class="interview-qa">
+      <p class="hint">Try answering aloud first, then click to check.</p>
+
+      <details class="iq-dropdown">
+        <summary>What is the difference between ESLint and Prettier?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <strong>ESLint</strong> — finds code quality/logic issues: unused variables, missing hook dependencies, accessibility violations. <strong>Prettier</strong> — formats code appearance: indentation, quotes, line length. ESLint = "your code has a bug"; Prettier = "your code looks messy". Use eslint-config-prettier to prevent conflicts. Both run in CI and pre-commit hooks.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What does webpack --mode production enable automatically?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Minification (Terser — removes whitespace, shortens variable names), tree shaking (eliminates dead code), scope hoisting, module concatenation, and no source maps by default (unless configured). Bundle size typically 60-80% smaller than development. Also sets <code>process.env.NODE_ENV</code> to 'production' — React removes dev warnings.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>Explain tree shaking. What conditions must be met for it to work?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Dead code elimination — unused exports removed from bundle. Conditions: 1) ES modules (<code>import/export</code>) not CommonJS. 2) Production mode. 3) Side-effect-free modules. 4) Named imports (not <code>import * as</code>). Verify with bundle analyzer — unused MUI components shouldn't appear in output if not imported.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How do you analyze bundle size in Webpack?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Install <code>webpack-bundle-analyzer</code> — generates interactive treemap showing each module's size in the bundle. Add to webpack config plugins or run as CLI. Identifies unexpectedly large dependencies. Common fixes: lazy load heavy components, use lodash-es instead of lodash, check if entire MUI is imported vs specific components.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is source mapping and why use it in production?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Source maps map minified production code back to original TypeScript source for debugging. In production, use <code>hidden-source-map</code> — maps exist for error tracking tools (Sentry, Datadog) but aren't exposed to users. Without source maps, production stack traces show minified gibberish — impossible to debug. Never commit source maps to public repos if they expose source code.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How would you deploy this React app?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> 1) Run <code>npm run build</code> → dist/ folder. 2) Deploy dist/ to static hosting — Netlify, Vercel, AWS S3 + CloudFront, Azure Static Web Apps. 3) Configure SPA redirect rule (all routes → index.html). 4) Set up CI/CD (GitHub Actions) to build and deploy on push to main. Environment variables for API URLs via build-time injection (<code>DefinePlugin</code>).</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== P2 PHASES (condensed but complete) ===================== -->
+<section id="p2-phase0">
+  <h2><span class="badge badge-day2">Day 2</span> Project 2 — Phase 0: Component Library Setup</h2>
+  <span class="badge badge-time">~45 min</span>
+
+  <div class="card why">
+    <div class="card-title">Why build a component library?</div>
+    <p>Enterprise teams don't rebuild buttons and modals in every project. They publish an internal npm package. Storybook documents components. Gulp automates SCSS compilation. This is exactly what InvoiceCloud-scale teams do.</p>
+  </div>
+
+  <div class="card do">
+    <div class="card-title">What YOU do</div>
+    <ol>
+      <li>Create <code>component-library/</code> folder</li>
+      <li><code>npm init -y</code> — set <code>"name": "@yourname/ui-kit"</code></li>
+      <li>Install: react, typescript, storybook, gulp, sass, rollup, jest</li>
+      <li>Create folder structure: <code>src/components/</code>, <code>src/styles/</code>, <code>stories/</code></li>
+      <li>Configure <code>tsconfig.json</code> for library (not app) output</li>
+    </ol>
+  </div>
+
+  <div class="card interview">
+    <div class="card-title">🎤 Interview Questions — P2 Phase 0 (click to reveal answers)</div>
+    <div class="interview-qa">
+      <p class="hint">Try answering aloud first, then click to check.</p>
+
+      <details class="iq-dropdown">
+        <summary>Why would a company build an internal component library vs using MUI directly?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> MUI is generic; companies need brand-specific components matching their design system (colors, typography, spacing). Internal library ensures UI consistency across 10+ products, speeds development (don't rebuild Button every project), enforces accessibility standards centrally, and allows controlled upgrades. MUI might be used as a base, wrapped in company-branded components.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is the difference between an app and a library in terms of build config?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Apps bundle everything (including React) into one output — Webpack, single HTML entry. Libraries output reusable modules consumed by other projects — must NOT bundle React (peerDependency), export multiple formats (CJS + ESM), include TypeScript declarations (.d.ts), and mark <code>"sideEffects": false</code> for tree shaking. Rollup/Vite preferred over Webpack for libraries.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is semantic versioning (semver)?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Version format MAJOR.MINOR.PATCH (e.g. 2.4.1). MAJOR — breaking changes (consumers must update code). MINOR — new features, backward compatible. PATCH — bug fixes, backward compatible. Consumers use ^2.4.1 to auto-update minor/patch but not major. Critical for npm packages — breaking changes without major bump breaks consumer apps.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What files should be included when publishing to npm?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Only what's needed to consume the package — typically the <code>dist/</code> folder. Set <code>"files": ["dist"]</code> in package.json. Include: compiled JS, TypeScript declarations, README, LICENSE. Exclude: src/, tests/, Storybook config, node_modules. Use <code>npm pack --dry-run</code> to preview what gets published before actually publishing.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section id="p2-phase1">
+  <h2><span class="badge badge-day2">Day 2</span> Phase 1: Storybook</h2>
+  <span class="badge badge-time">~1 hour</span>
+
+  <div class="card why">
+    <div class="card-title">Why Storybook?</div>
+    <p>Storybook is a workshop for UI components — develop, test, and document in isolation without running the full app. Designers and QA use it too.</p>
+  </div>
+
+  <div class="card do">
+    <div class="card-title">Setup</div>
+<pre>npx storybook@latest init</pre>
+    <p>Creates <code>.storybook/</code> config. Each component gets a <code>*.stories.tsx</code> file showing all variants (primary, disabled, loading, etc.).</p>
+  </div>
+
+  <h3>Story file anatomy</h3>
+<pre>export default { title: 'Components/Button', component: Button };
+export const Primary = { args: { variant: 'primary', children: 'Click me' } };
+export const Disabled = { args: { disabled: true, children: 'Disabled' } };</pre>
+
+  <div class="card interview">
+    <div class="card-title">🎤 Interview Questions — Storybook (click to reveal answers)</div>
+    <div class="interview-qa">
+      <p class="hint">Try answering aloud first, then click to check.</p>
+
+      <details class="iq-dropdown">
+        <summary>What is Storybook and why use it over testing in the full app?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Storybook is an isolated component development environment. Build and test components without running the full app, navigating to the right page, or mocking APIs. Faster feedback loop. Designers review components directly. QA tests all variants in one place. Documents component API visually. Essential for component libraries where components must work independently of any specific app context.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is a "story" in Storybook terms?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> A story is a single rendered state of a component — e.g. Button/Primary, Button/Disabled, Button/Loading. Each story passes different args (props) to the same component. Stories serve as visual test cases, documentation, and development sandbox. Organized in a hierarchy: ComponentName → VariantName in the Storybook sidebar.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How does Storybook help with design system consistency?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> All components and their variants are visible in one catalog — designers spot inconsistencies immediately. Controls addon lets you tweak props live. Docs addon auto-generates prop tables from TypeScript. Chromatic (Storybook's visual testing) catches unintended visual changes in CI. Becomes the single source of truth for "what components exist and how they look."</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What are Storybook addons you've used (a11y, controls, actions)?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <strong>Controls</strong> — interactive prop editing in the UI. <strong>Actions</strong> — logs event handler calls (onClick, onChange). <strong>a11y</strong> — runs axe accessibility checks on each story, shows violations. <strong>Docs</strong> — auto-generates documentation pages. <strong>Viewport</strong> — test responsive breakpoints. Mentioning these shows you know Storybook beyond basic story writing.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section id="p2-phase2">
+  <h2><span class="badge badge-day2">Day 2</span> Phase 2: Build All 9 Components</h2>
+  <span class="badge badge-time">~4 hours</span>
+
+  <p>Build in this order (simple → complex):</p>
+  <ol>
+    <li><strong>Loader</strong> — CSS animation, simplest start</li>
+    <li><strong>Button</strong> — variants: primary, secondary, ghost, disabled, loading</li>
+    <li><strong>Input</strong> — label, error state, helper text, types</li>
+    <li><strong>Select</strong> — dropdown with options, keyboard nav</li>
+    <li><strong>Accordion</strong> — expand/collapse, aria-expanded</li>
+    <li><strong>Tabs</strong> — keyboard arrow navigation, aria-selected</li>
+    <li><strong>Modal</strong> — focus trap, Escape to close, aria-modal</li>
+    <li><strong>Toast</strong> — auto-dismiss, portal, queue</li>
+    <li><strong>Table</strong> — sortable columns, responsive scroll</li>
+  </ol>
+
+  <div class="card warn">
+    <div class="card-title">Pattern for every component</div>
+    <ul>
+      <li><code>ComponentName.tsx</code> — logic + JSX</li>
+      <li><code>ComponentName.scss</code> — styles (BEM naming: <code>.btn--primary</code>)</li>
+      <li><code>ComponentName.stories.tsx</code> — all variants documented</li>
+      <li><code>ComponentName.test.tsx</code> — Jest + React Testing Library</li>
+      <li><code>index.ts</code> — re-export from <code>src/index.ts</code></li>
+    </ul>
+  </div>
+
+  <div class="card interview">
+    <div class="card-title">🎤 Interview Questions — Components (click to reveal answers)</div>
+    <div class="interview-qa">
+      <p class="hint">Try answering aloud first, then click to check.</p>
+
+      <details class="iq-dropdown">
+        <summary>How do you design a component API (props interface)?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Start with use cases — what does the consumer need to control? Keep props minimal (fewer = easier to use). Use sensible defaults. Extend native HTML attributes (<code>extends ButtonHTMLAttributes</code>). Use union types for variants: <code>variant: 'primary' | 'secondary'</code>. Document with JSDoc. Avoid boolean prop explosion — use variant enum instead of isPrimary, isSecondary, isGhost separately.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is compound component pattern? (e.g. Tabs.Tab, Tabs.Panel)</summary>
+        <p class="iq-answer"><strong>Answer:</strong> A set of components that work together implicitly via shared context — <code>&lt;Tabs&gt;&lt;Tabs.Tab&gt;&lt;Tabs.Panel&gt;&lt;/Tabs&gt;</code>. Parent manages shared state (active tab); children consume it via React Context without prop drilling. Gives consumers flexible composition while keeping internal state encapsulated. Used by Radix UI, Reach UI, and well-designed libraries.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How do you implement focus trap in a Modal?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> 1) On open: focus first focusable element in modal. 2) Listen for Tab/Shift+Tab keydown. 3) When Tab on last focusable element → focus first. 4) When Shift+Tab on first → focus last. 5) On Escape → close and return focus to trigger. Use a ref to query focusable elements: <code>button, [href], input, select, textarea, [tabindex]:not(-1)</code>. Libraries like focus-trap-react handle this.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is a React Portal and why use it for Toast/Modal?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <code>ReactDOM.createPortal(child, domNode)</code> renders children into a different DOM node outside the parent hierarchy. Modals/toasts portaled to <code>document.body</code> escape parent CSS (overflow:hidden, z-index stacking). Modal appears above all content regardless of where it's triggered in the component tree. Essential for overlays, tooltips, and dropdowns.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How do you make a Table accessible?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Use semantic HTML: <code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;th scope="col"&gt;</code>. Associate data cells with headers via <code>headers</code> attribute for complex tables. Provide caption or <code>aria-label</code>. Sortable columns: <code>aria-sort="ascending"</code>. Row selection: <code>aria-selected</code>. Never use div-based tables — screen readers rely on table semantics for navigation.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is BEM CSS naming and why use it in a library?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Block__Element--Modifier — e.g. <code>.btn__icon--large</code>. Block = component (btn). Element = part of block (__icon). Modifier = variant (--large). Prevents CSS class name collisions when library is consumed alongside other CSS. Makes specificity predictable. Consumers can override with <code>.btn--primary { background: red }</code> without fighting specificity wars.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How do you test a component with Jest and React Testing Library?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Test behavior, not implementation. <code>render(&lt;Button onClick={fn}&gt;Click&lt;/Button&gt;)</code>. Query by role/label: <code>screen.getByRole('button', { name: 'Click' })</code>. Simulate user: <code>fireEvent.click(button)</code>. Assert outcome: <code>expect(fn).toHaveBeenCalled()</code>. Avoid testing internal state or class names. Test what users see and do — accessible queries (getByRole) enforce good a11y practices.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section id="p2-phase3">
+  <h2><span class="badge badge-day2">Day 2</span> Phase 3: Gulp Build Pipeline</h2>
+  <span class="badge badge-time">~1.5 hours</span>
+
+  <div class="card why">
+    <div class="card-title">Why Gulp?</div>
+    <p>Gulp is a task runner — automates repetitive build steps. Older than Webpack but still used in enterprise for asset pipelines (SCSS, images). Interviewers love "I understand the full build pipeline."</p>
+  </div>
+
+  <h3>Gulp tasks to implement</h3>
+  <ul>
+    <li><strong>compileScss</strong> — SCSS → CSS via <code>gulp-sass</code></li>
+    <li><strong>minifyCss</strong> — compress CSS via <code>gulp-clean-css</code></li>
+    <li><strong>compressImages</strong> — optimize PNG/JPG via <code>gulp-imagemin</code></li>
+    <li><strong>watch</strong> — re-run tasks on file change via <code>gulp.watch</code></li>
+    <li><strong>serve</strong> — BrowserSync auto-reload during dev</li>
+    <li><strong>build</strong> — run all tasks in sequence</li>
+  </ul>
+
+  <div class="card interview">
+    <div class="card-title">🎤 Interview Questions — Gulp (click to reveal answers)</div>
+    <div class="interview-qa">
+      <p class="hint">Try answering aloud first, then click to check.</p>
+
+      <details class="iq-dropdown">
+        <summary>What is Gulp and how does it differ from Webpack?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Gulp is a task runner — automates file transformation tasks (SCSS→CSS, minify, compress images) using code-over-config pipelines. Webpack is a module bundler — understands JavaScript imports and builds a dependency graph. Gulp doesn't understand imports; Webpack doesn't natively compress images. Often used together: Webpack bundles JS, Gulp handles asset pipeline.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is a Gulp stream/pipeline?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Gulp uses Node.js streams — data flows through plugins without writing to disk between steps. <code>gulp.src('*.scss').pipe(sass()).pipe(minify()).pipe(gulp.dest('dist/'))</code>. Each .pipe() transforms the stream. Efficient for large file sets — processes files in memory. Contrasts with Grunt (temporary files between steps) which was slower.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is the difference between Gulp watch and Webpack dev server HMR?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Gulp watch re-runs entire tasks on file change — full SCSS recompile, full page reload in browser. Webpack HMR (Hot Module Replacement) updates only the changed module in the browser without full reload — preserves app state. HMR is faster and better UX for JS/React. Gulp watch is simpler and fine for CSS/asset tasks where full recompile is fast.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>When would you use Gulp vs Webpack vs both together?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Webpack alone — modern React/TS apps (handles JS, CSS via loaders). Gulp alone — simple static sites, asset-heavy pipelines (images, fonts, SCSS). Both together — legacy enterprise setups: Webpack bundles JS/React, Gulp handles SCSS compilation, image compression, SVG sprites. Your component library project uses both intentionally to demonstrate full pipeline knowledge.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section id="p2-phase4">
+  <h2><span class="badge badge-day2">Day 2</span> Phase 4: Rollup + npm Package</h2>
+  <span class="badge badge-time">~1 hour</span>
+
+  <div class="card why">
+    <div class="card-title">Why Rollup for libraries?</div>
+    <p>Webpack is great for apps. Rollup is better for libraries — produces cleaner ES module output, better tree-shaking for consumers of your package.</p>
+  </div>
+
+  <div class="card do">
+    <div class="card-title">package.json fields for publishing</div>
+<pre>{
+  "main": "dist/index.js",        // CommonJS entry
+  "module": "dist/index.esm.js",  // ES module entry
+  "types": "dist/index.d.ts",     // TypeScript declarations
+  "files": ["dist"],              // only publish dist/
+  "peerDependencies": {
+    "react": ">=18"
+  }
+}</pre>
+  </div>
+
+  <div class="card interview">
+    <div class="card-title">🎤 Interview Questions — Rollup + npm (click to reveal answers)</div>
+    <div class="interview-qa">
+      <p class="hint">Try answering aloud first, then click to check.</p>
+
+      <details class="iq-dropdown">
+        <summary>Why use Rollup instead of Webpack for a component library?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Rollup produces cleaner ES module output with better tree-shaking — consumers' bundlers can eliminate unused exports more effectively. Webpack bundles everything including dependencies; Rollup preserves the module structure. Output is smaller and more predictable for library consumers. Vite uses Rollup for production builds for the same reason.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What are peerDependencies and why are they important for React libraries?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> peerDependencies declare "I need this package to work, but I won't bundle it — the consumer must provide it." React libraries set <code>"react": ">=18"</code> as peerDependency. Prevents two React copies in the same app (causes hook errors and bloated bundles). Consumer's React is used. Without peerDependencies, npm installs a second React inside your library's node_modules.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is the difference between main, module, and types in package.json?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> <code>main</code> — CommonJS entry point (require()) — older bundlers. <code>module</code> — ES module entry (import) — modern bundlers prefer this for tree shaking. <code>types</code> — TypeScript declaration file (.d.ts) entry — enables autocomplete and type checking for consumers. Modern libraries provide all three for maximum compatibility.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How do you version and publish an npm package?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> 1) Build: <code>npm run build</code>. 2) Test: <code>npm test</code>. 3) Bump version: <code>npm version patch/minor/major</code> (updates package.json + git tag). 4) Publish: <code>npm publish --access public</code> (for scoped packages). Use CI/CD to automate on merge to main. Private packages use npm organizations or GitHub Packages.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What is tree-shakeable ESM output?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> ES Module output where each component is a separate export — <code>export { Button } from './Button'</code>. Consumer's bundler can import only Button and exclude Table, Modal, etc. from their bundle. Requires: ESM format (not CJS), <code>"sideEffects": false</code> in package.json, and no barrel file re-exports that force bundlers to include everything. Rollup produces this naturally.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== AI PHASE ===================== -->
+<section id="ai-phase">
+  <h2><span class="badge badge-ai">Day 2</span> AI Integration — Copilot + Cursor Rules</h2>
+  <span class="badge badge-time">~1 hour</span>
+
+  <div class="card why">
+    <div class="card-title">Why this matters for InvoiceCloud</div>
+    <p>InvoiceCloud explicitly mentions Cursor, Copilot, Claude, ChatGPT. Showing you define AI coding standards proves you use AI as a productivity tool, not a crutch.</p>
+  </div>
+
+  <div class="card do">
+    <div class="card-title">Files to create</div>
+    <ul>
+      <li><code>.github/copilot-instructions.md</code> — GitHub Copilot reads this for context</li>
+      <li><code>.cursor/rules/react.mdc</code> — React conventions for Cursor</li>
+      <li><code>.cursor/rules/typescript.mdc</code> — TS strict rules</li>
+      <li><code>.cursor/rules/accessibility.mdc</code> — a11y requirements</li>
+      <li><code>.cursor/rules/testing.mdc</code> — Jest/RTL standards</li>
+    </ul>
+  </div>
+
+  <div class="card interview">
+    <div class="card-title">🎤 Interview Questions — AI Workflow (click to reveal answers)</div>
+    <div class="interview-qa">
+      <p class="hint">Try answering aloud first, then click to check.</p>
+
+      <details class="iq-dropdown">
+        <summary>How do you use AI tools in your development workflow?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> AI as a productivity multiplier, not a replacement. Use Copilot/Cursor for boilerplate (component scaffolding, test stubs, config files), explaining unfamiliar code, and debugging errors. I always review, understand, and modify AI output. Define project standards (.cursor/rules, copilot-instructions.md) so AI generates code matching team conventions. Never commit code I don't understand.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How do you ensure AI-generated code meets your team's standards?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Define standards upfront in copilot-instructions.md and .cursor/rules — TypeScript strict mode, accessibility requirements, testing patterns, naming conventions. Run ESLint/Prettier on all AI output. Code review AI code same as human code. Write tests to verify behavior. Over time, well-configured rules make AI output consistently match team patterns without manual fixes.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>What are the risks of relying on AI for code generation?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Hallucinated APIs that don't exist. Subtle security vulnerabilities (XSS, SQL injection patterns). Outdated patterns from training data. Copy-paste without understanding creates maintenance debt. Over-reliance reduces problem-solving skills. Mitigation: always verify against docs, run tests, understand every line, use AI for acceleration not delegation. Treat AI output as a first draft from a junior developer.</p>
+      </details>
+
+      <details class="iq-dropdown">
+        <summary>How would you set up coding standards for a team using Copilot?</summary>
+        <p class="iq-answer"><strong>Answer:</strong> Create .github/copilot-instructions.md with project-specific rules: component patterns, file structure, TypeScript conventions, a11y requirements, testing standards. Add .cursor/rules/ for Cursor users. Enforce via ESLint/Prettier in CI. Include in onboarding docs. Review AI-generated PRs with extra scrutiny initially. Update instructions when patterns evolve. Measure: are AI PRs passing CI first time more often over time?</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MY NOTES ===================== -->
+<section id="my-notes">
+  <h2>📝 My Notes</h2>
+  <p>Write anything you learn during the build. Auto-saves to browser localStorage.</p>
+  <textarea id="myNotesArea" placeholder="Start typing your notes here..."></textarea>
+  <div class="btn-row">
+    <button onclick="saveNotes('myNotesArea', 'myNotes')">Save Notes</button>
+    <button class="secondary" onclick="exportSection('myNotes')">Export as text</button>
+  </div>
+</section>
+
+<!-- ===================== CONCEPTS LIBRARY ===================== -->
+<section id="concepts">
+  <h2>💡 Concepts Library</h2>
+  <p>When you say <strong>"note"</strong> in chat, I'll explain a concept and you add it here. Your personal cheat sheet.</p>
+
+  <input type="text" id="conceptTitle" placeholder="Concept name (e.g. Tree Shaking)" style="margin-bottom:0.5rem" />
+  <textarea id="conceptBody" placeholder="Explanation in your own words — writing it yourself helps you remember"></textarea>
+  <div class="btn-row">
+    <button onclick="addConcept()">Add Concept</button>
+  </div>
+  <div class="entry-list" id="conceptsList"></div>
+</section>
+
+<!-- ===================== ERROR LOG ===================== -->
+<section id="errors">
+  <h2>🐛 Error Log</h2>
+  <p>Log every error you hit — error message, cause, and fix. Future you will thank present you.</p>
+
+  <input type="text" id="errorTitle" placeholder="Short title (e.g. ts-loader: Cannot find module)" style="margin-bottom:0.5rem" />
+  <textarea id="errorBody" placeholder="Error message:&#10;&#10;Cause:&#10;&#10;Fix:"></textarea>
+  <div class="btn-row">
+    <button onclick="addError()">Log Error</button>
+  </div>
+  <div class="entry-list" id="errorsList"></div>
+</section>
+
+</main>
+
+<script>
+  // Navigation
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const id = link.getAttribute('href').slice(1);
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      link.classList.add('active');
+    });
+  });
+
+  // Checklist persistence
+  const STORAGE_KEY = 'invoicecloud_checklist';
+
+  function loadChecklist() {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    document.querySelectorAll('.phase-checklist input[type=checkbox]').forEach(cb => {
+      if (saved[cb.dataset.id]) {
+        cb.checked = true;
+        cb.closest('label').classList.add('done');
+      }
+      cb.addEventListener('change', () => {
+        cb.closest('label').classList.toggle('done', cb.checked);
+        saved[cb.dataset.id] = cb.checked;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+        updateProgress();
+      });
+    });
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const all = document.querySelectorAll('.phase-checklist input[type=checkbox]');
+    const done = [...all].filter(c => c.checked).length;
+    const pct = all.length ? Math.round((done / all.length) * 100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = pct + '% complete — ' + done + ' of ' + all.length + ' tasks done';
+  }
+
+  // Notes
+  function saveNotes(areaId, key) {
+    localStorage.setItem(key, document.getElementById(areaId).value);
+    alert('Saved!');
+  }
+
+  function loadNotes() {
+    const notes = localStorage.getItem('myNotes');
+    if (notes) document.getElementById('myNotesArea').value = notes;
+  }
+
+  // Pre-seeded concepts (from mentor notes) — merged on each load if missing
+  const SEED_CONCEPTS = [
+    {
+      title: 'Mock GraphQL with Apollo SchemaLink',
+      body: `No backend needed for the invoice dashboard demo.
+
+HOW IT WORKS:
+React Component → useQuery(GET_INVOICES) → Apollo Client → SchemaLink → Local Resolvers → mockData.ts
+
+FILES YOU WILL CREATE (Phase 3):
+• schema.ts      — GraphQL type definitions (Invoice, Payment, Query, Mutation)
+• mockData.ts    — fake invoice & payment arrays
+• resolvers.ts   — functions that filter, search, login against mock data
+• client.ts      — Apollo Client wired with SchemaLink
+
+PRODUCTION SWAP:
+SchemaLink (local)  →  HttpLink (https://api.example.com/graphql)
+Components & queries stay the same — only the Apollo link changes.
+
+INTERVIEW LINE:
+"Frontend-focused demo using local GraphQL resolvers. In production I'd swap SchemaLink for HttpLink pointing to a real API."
+
+DEMO LOGIN:
+Email: demo@invoicecloud.com | Password: password123`,
+      date: 'Noted — Day 1, Phase 0',
+      seed: true
+    },
+    {
+      title: 'npm install vs npm install <package>',
+      body: `WHAT IT IS:
+npm is a package manager. package.json is the shopping list.
+
+npm install (no packages)
+→ Installs ONLY what is already listed in package.json.
+→ If dependencies section is empty → "audited 1 package" (just your project).
+→ Does NOT add new packages.
+
+npm install react webpack typescript
+→ DOWNLOADS those packages AND adds them to package.json.
+→ Creates/updates node_modules/ folder.
+→ This is what you need on a fresh project.
+
+RULE:
+Fresh project → npm install <package names>
+Existing project (clone) → npm install (from existing package.json)
+
+INTERVIEW LINE:
+"dependencies are runtime packages; devDependencies are build-time tools. npm install reads package.json; npm install <pkg> adds new packages."`,
+      date: 'Noted — Day 1, Phase 0 (Error #1)',
+      seed: true
+    },
+    {
+      title: 'Peer Dependencies',
+      body: `WHAT IT IS:
+A package saying "I need X installed in the project, but I won't bundle it myself."
+
+Example: @apollo/client lists graphql as a peerDependency.
+→ You must install graphql separately alongside Apollo.
+→ Apollo uses YOUR project's graphql, not its own copy.
+
+WHY IT EXISTS:
+Prevents duplicate copies of React, graphql, etc. in node_modules.
+Two copies of React = hook errors and bloated bundles.
+
+WHEN ERRORS HAPPEN:
+ERESOLVE unable to resolve dependency tree
+→ npm can't find a compatible version of the peer dependency.
+
+FIX:
+1. Install the peer explicitly: npm install graphql @apollo/client
+2. Pin versions that work together
+3. Last resort: --legacy-peer-deps (learning projects only)
+
+INTERVIEW LINE:
+"Peer dependencies declare compatibility requirements without bundling the package — common for React libraries and GraphQL clients."`,
+      date: 'Noted — Day 1, Phase 0 (Error #2)',
+      seed: true
+    },
+    {
+      title: 'Project .npmrc vs Global .npmrc (Registry)',
+      body: `WHAT IT IS:
+.npmrc is npm's config file. It controls WHERE packages are downloaded from.
+
+Global (~/.npmrc):
+→ Applies to ALL projects on your machine.
+→ On corporate laptops, often points to AWS CodeArtifact or Artifactory.
+
+Project (invoice-dashboard/.npmrc):
+→ Applies ONLY to that project.
+→ OVERRIDES global settings for that folder.
+
+OUR SITUATION:
+Global registry = AWS CodeArtifact (company packages)
+Personal learning project = needs public npm (registry.npmjs.org)
+
+FIX — create invoice-dashboard/.npmrc:
+registry=https://registry.npmjs.org/
+
+Work projects still use CodeArtifact. Learning project uses public npm. No conflict.
+
+SYMPTOM WHEN WRONG:
+graphql@undefined, ERESOLVE errors, packages not found — even with correct version numbers.
+
+INTERVIEW LINE:
+"Enterprise dev machines often use private registries. For personal projects I use a project-level .npmrc to target the public registry without changing global work configuration."`,
+      date: 'Noted — Day 1, Phase 0 (Error #2 root cause)',
+      seed: true
+    }
+  ];
+
+  const SEED_ERRORS = [
+    {
+      title: 'Error #1 — npm install audited only 1 package',
+      body: `ERROR MESSAGE:
+npm install
+up to date, audited 1 package in 312ms
+found 0 vulnerabilities
+
+WHAT IT MEANS:
+Nothing was installed. Only your empty project was "audited".
+package.json had no dependencies listed yet.
+
+CAUSE:
+Ran "npm install" without package names on a fresh project.
+npm install = install what's IN package.json (empty list = nothing to do).
+
+FIX:
+Install packages BY NAME:
+npm install react react-dom react-router-dom @apollo/client graphql @mui/material ...
+
+THEN verify:
+• node_modules/ folder appears (large)
+• package.json has "dependencies" section
+
+LESSON:
+npm init -y → npm install <packages> → NOT plain npm install first.`,
+      date: 'Day 1, Phase 0 — Error #1',
+      seed: true
+    },
+    {
+      title: 'Error #2 — ERESOLVE graphql@undefined (CodeArtifact)',
+      body: `ERROR MESSAGE:
+npm error code ERESOLVE
+npm error ERESOLVE unable to resolve dependency tree
+npm error Found: graphql@undefined
+npm error Could not resolve dependency:
+npm error peer graphql@"^15.0.0 || ^16.0.0" from @apollo/client@3.11.8
+
+WHAT IT MEANS:
+npm tried to install @apollo/client but couldn't resolve its required peer dependency graphql.
+"graphql@undefined" = npm couldn't find/match the graphql version from your registry.
+
+CAUSE (ROOT):
+Global ~/.npmrc points to AWS CodeArtifact (corporate registry):
+registry=https://carrier-....codeartifact.us-east-1.amazonaws.com/npm/carrier/
+
+CodeArtifact couldn't resolve graphql for this personal learning project.
+NOT a wrong version number — wrong REGISTRY.
+
+FIX:
+1. Create invoice-dashboard/.npmrc:
+   registry=https://registry.npmjs.org/
+
+2. Re-run install:
+   npm install react react-dom react-router-dom graphql @apollo/client @mui/material ...
+
+3. Verify: "added 100+ packages" in terminal
+
+FALLBACK (if still fails):
+npm install ... --legacy-peer-deps
+
+LESSON:
+Corporate laptop → check registry first when npm errors look weird.
+Project .npmrc for personal projects. Never use --force blindly.`,
+      date: 'Day 1, Phase 0 — Error #2',
+      seed: true
+    },
+    {
+      title: 'Error #3 — TS17004 Cannot use JSX / Module parse failed',
+      body: `ERROR MESSAGES:
+TS17004: Cannot use JSX unless the '--jsx' flag is provided. (App.tsx)
+Module parse failed: Unexpected token (index.tsx) — fails on <App />
+
+WHAT IT MEANS:
+TypeScript doesn't know how to handle JSX syntax (<main>, <App />).
+ts-loader outputs raw JSX → Webpack can't parse it.
+
+CAUSE:
+tsconfig.json was EMPTY (file created but content not pasted).
+Without "jsx": "react-jsx" in compilerOptions, TypeScript skips JSX transform.
+
+FIX:
+Paste full tsconfig.json content (Step B in guide):
+"jsx": "react-jsx" inside compilerOptions
+
+Then restart dev server:
+1. Stop running server (Ctrl+C in terminal)
+2. npm start again
+
+LESSON:
+Always verify tsconfig.json is not empty before npm start.
+If you see JSX errors → check tsconfig.json first.`,
+      date: 'Day 1, Phase 0 — Error #3',
+      seed: true
+    },
+    {
+      title: 'Error #4 — File is not a module (TS2306)',
+      body: `ERROR MESSAGE:
+File 'DashboardPage.tsx' is not a module.ts(2306)
+
+WHAT IT MEANS:
+App.tsx imports the page but TypeScript finds no export in that file.
+
+CAUSE:
+Page .tsx file exists but is EMPTY or missing export default.
+
+FIX:
+Add component + export default to every page file in src/pages/.
+
+LESSON:
+Never leave .tsx files empty — always export default the component.`,
+      date: 'Day 1, Phase 2 — Error #4',
+      seed: true
+    }
+  ];
+
+  function mergeSeedEntries(storageKey, seedArray) {
+    const existing = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    const titles = new Set(existing.map(e => e.title));
+    let changed = false;
+    seedArray.forEach(item => {
+      if (!titles.has(item.title)) {
+        existing.unshift(item);
+        changed = true;
+      }
+    });
+    if (changed) localStorage.setItem(storageKey, JSON.stringify(existing));
+  }
+
+  function seedMentorNotes() {
+    mergeSeedEntries('concepts', SEED_CONCEPTS);
+    mergeSeedEntries('errors', SEED_ERRORS);
+  }
+
+  function seedConceptsIfNeeded() {
+    seedMentorNotes();
+  }
+
+  // Concepts
+  function addConcept() {
+    const title = document.getElementById('conceptTitle').value.trim();
+    const body = document.getElementById('conceptBody').value.trim();
+    if (!title) return alert('Enter a concept name');
+    const entries = JSON.parse(localStorage.getItem('concepts') || '[]');
+    entries.unshift({ title, body, date: new Date().toLocaleString() });
+    localStorage.setItem('concepts', JSON.stringify(entries));
+    document.getElementById('conceptTitle').value = '';
+    document.getElementById('conceptBody').value = '';
+    renderEntries('concepts', 'conceptsList');
+  }
+
+  // Errors
+  function addError() {
+    const title = document.getElementById('errorTitle').value.trim();
+    const body = document.getElementById('errorBody').value.trim();
+    if (!title) return alert('Enter an error title');
+    const entries = JSON.parse(localStorage.getItem('errors') || '[]');
+    entries.unshift({ title, body, date: new Date().toLocaleString() });
+    localStorage.setItem('errors', JSON.stringify(entries));
+    document.getElementById('errorTitle').value = '';
+    document.getElementById('errorBody').value = '';
+    renderEntries('errors', 'errorsList');
+  }
+
+  function renderEntries(key, listId) {
+    const entries = JSON.parse(localStorage.getItem(key) || '[]');
+    const list = document.getElementById(listId);
+    list.innerHTML = entries.map((e, i) => `
+      <div class="entry">
+        <button class="delete-btn" onclick="deleteEntry('${key}', ${i})">✕</button>
+        <div class="entry-meta">${e.date}</div>
+        <strong>${esc(e.title)}</strong>${e.seed ? ' <span style="color:var(--accent);font-size:0.72rem">(mentor note)</span>' : ''}
+        ${e.body ? '<pre>' + esc(e.body) + '</pre>' : ''}
+      </div>
+    `).join('');
+  }
+
+  function deleteEntry(key, index) {
+    const entries = JSON.parse(localStorage.getItem(key) || '[]');
+    entries.splice(index, 1);
+    localStorage.setItem(key, JSON.stringify(entries));
+    renderEntries(key, key === 'concepts' ? 'conceptsList' : 'errorsList');
+  }
+
+  function esc(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function exportSection(key) {
+    const val = localStorage.getItem(key) || '';
+    const blob = new Blob([val], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = key + '.txt';
+    a.click();
+  }
+
+  loadChecklist();
+  loadNotes();
+  seedMentorNotes();
+  renderEntries('concepts', 'conceptsList');
+  renderEntries('errors', 'errorsList');
+
+  // Auto-save notes
+  document.getElementById('myNotesArea').addEventListener('input', debounce(() => {
+    localStorage.setItem('myNotes', document.getElementById('myNotesArea').value);
+  }, 500));
+
+  function debounce(fn, ms) {
+    let t;
+    return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+  }
+</script>
+</body>
+</html>
